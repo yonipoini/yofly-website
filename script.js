@@ -376,17 +376,68 @@ function updateGatedUi(profile) {
 function bindLoginForm() {
   const loginForm = document.getElementById('loginForm');
   const loginMessage = document.getElementById('loginMessage');
+  const authModeInput = document.getElementById('authMode');
+  const authBadge = document.getElementById('authBadge');
+  const authIntroCopy = document.getElementById('authIntroCopy');
+  const authFooterCopy = document.getElementById('authFooterCopy');
+  const authSubmitBtn = document.getElementById('authSubmitBtn');
+  const switchToRegisterBtn = document.getElementById('switchToRegisterBtn');
+  const modeButtons = Array.from(document.querySelectorAll('[data-auth-mode]'));
   if (!loginForm || !supabaseClient) return;
+
+  const setAuthMode = (mode) => {
+    const isRegisterMode = mode === 'register';
+    if (authModeInput) authModeInput.value = mode;
+    if (authBadge) authBadge.textContent = isRegisterMode ? 'Create Account' : 'Sign In';
+    if (authIntroCopy) {
+      authIntroCopy.textContent = isRegisterMode
+        ? 'Create your YoFly Crew account and receive a secure Magic Link to get started.'
+        : 'Enter your email to receive a secure Magic Link for your existing account.';
+    }
+    if (authSubmitBtn) {
+      authSubmitBtn.textContent = isRegisterMode ? 'Send Registration Link' : 'Send Sign-In Link';
+    }
+    if (authFooterCopy) {
+      authFooterCopy.innerHTML = isRegisterMode
+        ? 'Already have an account? <button type="button" id="switchBackToSignInBtn" class="auth-inline-link">Sign in instead</button>'
+        : 'New here? <button type="button" id="switchToRegisterBtn" class="auth-inline-link">Create your account</button>';
+    }
+
+    modeButtons.forEach((button) => {
+      button.classList.toggle('is-active', button.dataset.authMode === mode);
+    });
+
+    const nextRegisterSwitch = document.getElementById('switchToRegisterBtn');
+    const nextSignInSwitch = document.getElementById('switchBackToSignInBtn');
+    if (nextRegisterSwitch) nextRegisterSwitch.onclick = () => setAuthMode('register');
+    if (nextSignInSwitch) nextSignInSwitch.onclick = () => setAuthMode('signin');
+  };
+
+  modeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      setAuthMode(button.dataset.authMode || 'signin');
+    });
+  });
+
+  if (switchToRegisterBtn) {
+    switchToRegisterBtn.addEventListener('click', () => setAuthMode('register'));
+  }
+
+  setAuthMode(authModeInput?.value || 'signin');
 
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
-    const submitBtn = loginForm.querySelector('button');
+    const mode = authModeInput?.value || 'signin';
+    const isRegisterMode = mode === 'register';
+    const submitBtn = authSubmitBtn || loginForm.querySelector('button');
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
     if (loginMessage) {
-      loginMessage.textContent = 'Connecting to crew server...';
+      loginMessage.textContent = isRegisterMode
+        ? 'Creating your crew account...'
+        : 'Connecting to your crew account...';
       loginMessage.style.color = 'var(--text-muted)';
     }
 
@@ -394,21 +445,27 @@ function bindLoginForm() {
       email,
       options: {
         emailRedirectTo: `${window.location.origin}/profile`,
+        shouldCreateUser: isRegisterMode,
       },
     });
 
     if (error) {
       if (loginMessage) {
-        loginMessage.textContent = `Error: ${error.message}`;
+        loginMessage.textContent =
+          !isRegisterMode && /signups not allowed|user not found|invalid login credentials/i.test(error.message)
+            ? 'No account matched that email. Use Create Account first.'
+            : `Error: ${error.message}`;
         loginMessage.style.color = '#ff4b4b';
       }
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Send Magic Link';
+      submitBtn.textContent = isRegisterMode ? 'Send Registration Link' : 'Send Sign-In Link';
       return;
     }
 
     if (loginMessage) {
-      loginMessage.textContent = 'Check your email for the Magic Link.';
+      loginMessage.textContent = isRegisterMode
+        ? 'Check your email to finish creating your account.'
+        : 'Check your email for the sign-in Magic Link.';
       loginMessage.style.color = 'var(--accent)';
     }
     loginForm.style.display = 'none';

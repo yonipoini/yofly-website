@@ -31,27 +31,36 @@
       </a>
     </div>
 
-    <div class="content-card" style="padding: 50px; border-radius: 32px; background: rgba(14, 14, 14, 0.8); border: 1px solid var(--border); box-shadow: 0 40px 80px rgba(0,0,0,0.5);">
-      <div class="section-badge" style="margin-bottom: 10px;">Sign In</div>
+    <div class="content-card auth-card-shell" style="padding: 50px; border-radius: 32px; background: rgba(14, 14, 14, 0.8); border: 1px solid var(--border); box-shadow: 0 40px 80px rgba(0,0,0,0.5);">
+      <div class="section-badge" id="authBadge" style="margin-bottom: 10px;">Sign In</div>
       <h1 style="font-size: 2em; margin-bottom: 10px;">Welcome <span class="gradient-text">Crew</span></h1>
-      <p style="margin-bottom: 35px; opacity: 0.6; font-size: 0.95em;">Enter your email to receive a secure Magic Link.</p>
+      <p id="authIntroCopy" style="margin-bottom: 24px; opacity: 0.6; font-size: 0.95em;">Enter your email to receive a secure Magic Link.</p>
+
+      <div class="auth-mode-switch" role="tablist" aria-label="Authentication Mode">
+        <button type="button" class="auth-mode-btn is-active" id="signInModeBtn" data-auth-mode="signin">Existing User</button>
+        <button type="button" class="auth-mode-btn" id="registerModeBtn" data-auth-mode="register">Create Account</button>
+      </div>
 
       <form id="loginForm" style="display: grid; gap: 20px;">
+        <input type="hidden" id="authMode" value="signin" />
         <div>
           <label for="loginEmail" style="display: block; margin-bottom: 10px; font-size: 0.85em; opacity: 0.7; font-weight: 500;">Work or Personal Email</label>
           <input type="email" id="loginEmail" placeholder="your@email.com" required 
                  style="width: 100%; padding: 18px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: white; font-family: inherit; font-size: 1em;" />
         </div>
         
-        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 18px; margin-top: 10px;">
-          Send Magic Link
+        <button type="submit" id="authSubmitBtn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 18px; margin-top: 10px;">
+          Send Sign-In Link
         </button>
       </form>
 
       <div id="loginMessage" style="margin-top: 25px; text-align: center; font-size: 0.9em; min-height: 24px;"></div>
 
       <div style="margin-top: 35px; padding-top: 30px; border-top: 1px solid var(--border); text-align: center;">
-        <p style="font-size: 0.85em; opacity: 0.5;">Not crew? <a href="about.html" class="gradient-text" style="font-weight: 600;">Learn More</a></p>
+        <p id="authFooterCopy" style="font-size: 0.85em; opacity: 0.7;">
+          New here? <button type="button" id="switchToRegisterBtn" class="auth-inline-link">Create your account</button>
+        </p>
+        <p style="font-size: 0.82em; opacity: 0.5; margin-top: 10px;">Not crew? <a href="about.html" class="gradient-text" style="font-weight: 600;">Learn More</a></p>
       </div>
     </div>
 
