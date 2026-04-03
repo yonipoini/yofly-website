@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YoFly Crew — The Premium Crew Social Network</title>
+  <meta name="description" content="YoFly Crew is the exclusive social network built for crew members. Connect with pilots, flight attendants and cabin crew worldwide." />
+  <link rel="icon" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav" id="nav">
+    <canvas class="nav-canvas" id="navCanvas"></canvas>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="features.html">Features</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="alerts.html">Alerts</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#download" class="btn btn-ghost">Sign In</a>
+        <a href="#download" class="btn btn-primary">Get the App</a>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Scroll Progress Plane -->
+  <div class="scroll-plane-wrap" id="scrollPlaneWrap" aria-hidden="true">
+    <div class="scroll-plane-track"></div>
+    <div class="scroll-plane-fill" id="scrollPlaneFill"></div>
+    <div class="scroll-plane-icon" id="scrollPlaneIcon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+      <li><a href="community.html" class="mobile-nav-link">Community</a></li>
+      <li><a href="marketplace.html" class="mobile-nav-link">Marketplace</a></li>
+      <li><a href="alerts.html" class="mobile-nav-link">Alerts</a></li>
+      <li><a href="#download" class="mobile-nav-link btn btn-primary">Get the App</a></li>
+    </ul>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <!-- World flight map background -->
+    <canvas class="flight-canvas" id="flightCanvas"></canvas>
+    <!-- Animated grid background -->
+    <div class="hero-grid"></div>
+    <!-- Floating orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <!-- Particles -->
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="hero-content">
+      <div class="hero-badge reveal-up">
+        <span class="badge-dot"></span>
+        <span>Now Launching · Pilots &amp; Flight Attendants</span>
+      </div>
+      <h1 class="hero-title reveal-up">
+        The App Built
+        <br/>
+        <span class="gradient-text">for Airline Crew.</span>
+      </h1>
+      <p class="hero-subtitle reveal-up">
+        Real-time layover alerts, crew-only chat rooms, crash pad listings, and a community that actually gets the life — built exclusively for pilots and flight attendants.
+      </p>
+      <div class="hero-actions reveal-up">
+        <a href="#download" class="btn btn-primary btn-large">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Free
+        </a>
+        <a href="#features" class="btn btn-ghost btn-large">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          See Features
+        </a>
+      </div>
+
+      <div class="hero-launch-note reveal-up">
+        <span class="launch-icon">✈️</span>
+        <span>Crew-verified access only &nbsp;·&nbsp; Free at launch &nbsp;·&nbsp; iOS &amp; Android</span>
+      </div>
+    </div>
+
+    <!-- Floating phone mockup -->
+    <div class="hero-phone reveal-right">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-header">
+            <div class="phone-status">
+              <span>9:41</span>
+              <div class="phone-icons">
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="white"><rect x="0" y="3" width="3" height="7" rx="1"/><rect x="4" y="2" width="3" height="8" rx="1"/><rect x="8" y="1" width="3" height="9" rx="1"/><rect x="12" y="0" width="2" height="10" rx="1" opacity="0.4"/></svg>
+              </div>
+            </div>
+            <div class="phone-notch"></div>
+          </div>
+          <div class="phone-content">
+            <div class="phone-app-header">
+              <img src="logo.png" class="phone-app-logo" alt="YoFly" />
+              <div>
+                <div class="phone-app-name">YoFly Crew</div>
+                <div class="phone-app-sub">🟢 3,241 crew online</div>
+              </div>
+            </div>
+            <!-- Alert card mockup -->
+            <div class="phone-alert-card">
+              <div class="alert-tag">✈️ JFK Alert</div>
+              <div class="alert-text">TSA PreCheck at Terminal 4 — 8 min wait. Lounge open for crew 24/7.</div>
+              <div class="alert-meta">2 min ago · Capt. Rivera</div>
+            </div>
+            <!-- Chat preview -->
+            <div class="phone-section-label">NYC Layover Chat</div>
+            <div class="phone-messages">
+              <div class="phone-msg phone-msg-other">
+                <div class="msg-avatar">R</div>
+                <div class="msg-bubble">Dinner at The Hangar Bar? 15% crew discount!</div>
+              </div>
+              <div class="phone-msg phone-msg-me">
+                <div class="msg-bubble msg-bubble-me">On my way! ✈️</div>
+              </div>
+              <div class="phone-msg phone-msg-other">
+                <div class="msg-avatar">J</div>
+                <div class="msg-bubble">Just landed. Be there in 20!</div>
+              </div>
+            </div>
+          </div>
+          <!-- Bottom nav -->
+          <div class="phone-nav">
+            <div class="phone-nav-item active">🏠</div>
+            <div class="phone-nav-item">🚨</div>
+            <div class="phone-nav-item">🗺️</div>
+            <div class="phone-nav-item">💬</div>
+            <div class="phone-nav-item">🛒</div>
+          </div>
+        </div>
+      </div>
+      <!-- Glow rings around phone -->
+      <div class="phone-glow-ring ring-1"></div>
+      <div class="phone-glow-ring ring-2"></div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-mouse">
+        <div class="scroll-mouse-wheel"></div>
+      </div>
+      <span>Scroll down</span>
+    </div>
+  </section>
+
+  <!-- ============ LOGOS TICKER ============ -->
+  <section class="logos-section">
+    <div class="logos-label">Trusted by crew from top airlines worldwide</div>
+    <div class="logos-ticker">
+      <div class="logos-track">
+        <div class="airline-logo">✈ Delta</div>
+        <div class="airline-logo">✈ United</div>
+        <div class="airline-logo">✈ American</div>
+        <div class="airline-logo">✈ Emirates</div>
+        <div class="airline-logo">✈ British Airways</div>
+        <div class="airline-logo">✈ Lufthansa</div>
+        <div class="airline-logo">✈ Singapore</div>
+        <div class="airline-logo">✈ Qatar Airways</div>
+        <div class="airline-logo">✈ Air France</div>
+        <div class="airline-logo">✈ Southwest</div>
+        <!-- Duplicate for infinite loop -->
+        <div class="airline-logo">✈ Delta</div>
+        <div class="airline-logo">✈ United</div>
+        <div class="airline-logo">✈ American</div>
+        <div class="airline-logo">✈ Emirates</div>
+        <div class="airline-logo">✈ British Airways</div>
+        <div class="airline-logo">✈ Lufthansa</div>
+        <div class="airline-logo">✈ Singapore</div>
+        <div class="airline-logo">✈ Qatar Airways</div>
+        <div class="airline-logo">✈ Air France</div>
+        <div class="airline-logo">✈ Southwest</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="features-section" id="features">
+    <div class="section-header">
+      <div class="section-badge reveal-up">🔥 Core Features</div>
+      <h2 class="section-title reveal-up">Everything your crew needs,<br/><span class="gradient-text">in one place.</span></h2>
+      <p class="section-sub reveal-up">From real-time TSA alerts to crew crash pads — YoFly Crew is the all-in-one platform for crew members.</p>
+    </div>
+
+    <div class="features-grid">
+
+      <!-- Row 1: Full-width Alerts card -->
+      <div class="feature-card feature-card-full reveal-up" id="alerts">
+        <div class="feature-card-body">
+          <div class="feature-icon-big">🛎️</div>
+          <div class="feature-card-content">
+            <span class="feature-tag">Real-Time</span>
+            <h3>Layover Alerts</h3>
+            <p>Crew post live airport intel — TSA wait times, lounge access, crew discounts, and gate changes — right from the terminal floor.</p>
+            <div class="feature-labels">
+              <span class="label">TSA Wait Times</span>
+              <span class="label">Crew Discounts</span>
+              <span class="label">Gate Changes</span>
+            </div>
+          </div>
+        </div>
+        <div class="feature-pills-col">
+          <div class="alert-pill alert-pill-1">🟢 14-min TSA PreCheck · JFK T4</div>
+          <div class="alert-pill alert-pill-2">🔴 Gate C11 Changed → C33</div>
+          <div class="alert-pill alert-pill-3">⭐ 20% Off Crew · The Hangar MIA</div>
+        </div>
+      </div>
+
+      <!-- Row 2: Three equal cards -->
+      <div class="features-row-3">
+        <div class="feature-card feature-card-sm reveal-up delay-1">
+          <div class="feature-icon-big">🗺️</div>
+          <span class="feature-tag">Interactive</span>
+          <h3>Crew Map</h3>
+          <p>A live crew-powered map showing alerts, crash pads, and local hotspots around every major airport.</p>
+          <div class="feature-labels">
+            <span class="label">Live Pins</span>
+            <span class="label">Airport Zones</span>
+          </div>
+        </div>
+
+        <div class="feature-card feature-card-sm reveal-up delay-2" id="community">
+          <div class="feature-icon-big">💬</div>
+          <span class="feature-tag">Social</span>
+          <h3>Vent Room</h3>
+          <p>A crew-only anonymous space to post stories, vent, ask questions, and share industry tips — no judgment, no exposure.</p>
+          <div class="feature-labels">
+            <span class="label">Anonymous</span>
+            <span class="label">Crew Only</span>
+          </div>
+        </div>
+
+        <div class="feature-card feature-card-sm reveal-up delay-3">
+          <div class="feature-icon-big">✈️</div>
+          <span class="feature-tag">Exclusive</span>
+          <h3>Crew Chats</h3>
+          <p>Jump into city or airline chat rooms. Find crew for dinner, share local gems, or just connect with people who get it.</p>
+          <div class="feature-labels">
+            <span class="label">City Rooms</span>
+            <span class="label">Airline Rooms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Full-width Marketplace card -->
+      <div class="feature-card feature-card-full reveal-up" id="marketplace">
+        <div class="feature-card-body">
+          <div class="feature-icon-big">🛏️</div>
+          <div class="feature-card-content">
+            <span class="feature-tag">Peer-to-Peer</span>
+            <h3>Crew Marketplace</h3>
+            <p>The only marketplace built for crew member. Find crash pads near any airport, sell gear, and trade schedule swaps with verified crew members.</p>
+            <div class="feature-labels">
+              <span class="label">Crash Pads</span>
+              <span class="label">Gear Sales</span>
+              <span class="label">Schedule Swaps</span>
+            </div>
+          </div>
+        </div>
+        <div class="feature-market-col">
+          <div class="market-card">
+            <div class="market-card-img">🏨</div>
+            <div class="market-card-info">
+              <div class="market-card-title">JFK Crash Pad</div>
+              <div class="market-card-sub">10 min · $65/night</div>
+              <div class="market-card-badge">Available Now</div>
+            </div>
+          </div>
+          <div class="market-card">
+            <div class="market-card-img">🛏️</div>
+            <div class="market-card-info">
+              <div class="market-card-title">LAX Crash Pad</div>
+              <div class="market-card-sub">5 min · $55/night</div>
+              <div class="market-card-badge">2 Left</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="how-section">
+    <div class="section-header">
+      <div class="section-badge reveal-up">⚡ Simple & Fast</div>
+      <h2 class="section-title reveal-up">Up and flying in <span class="gradient-text">3 steps.</span></h2>
+    </div>
+    <div class="steps-container">
+      <div class="step-line">
+        <div class="step-line-fill" id="stepLineFill"></div>
+      </div>
+      <div class="steps">
+        <div class="step reveal-up" style="--delay: 0s">
+          <div class="step-number">01</div>
+          <div class="step-icon">📲</div>
+          <h3>Download the App</h3>
+          <p>Available on iOS and Android. Free forever for all crew members verified with your employee ID.</p>
+        </div>
+        <div class="step reveal-up" style="--delay: 0.2s">
+          <div class="step-number">02</div>
+          <div class="step-icon">🪪</div>
+          <h3>Verify Your Crew ID</h3>
+          <p>Upload your crew badge or airline ID for instant verification. Your privacy is protected — we never share your data.</p>
+        </div>
+        <div class="step reveal-up" style="--delay: 0.4s">
+          <div class="step-number">03</div>
+          <div class="step-icon">✈️</div>
+          <h3>Take Off</h3>
+          <p>Jump into crew chats, post layover alerts, browse crash pads, and connect with pilots and FAs who get the life.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section class="testimonials-section">
+    <div class="section-header">
+      <div class="section-badge reveal-up">⭐ Reviews</div>
+      <h2 class="section-title reveal-up">Crew love it.<br/><span class="gradient-text">Pilots swear by it.</span></h2>
+    </div>
+    <div class="testimonials-scroll-container">
+      <div class="testimonials-track" id="testimonialsTrack">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"YoFly Crew completely changed how I do layovers. Found a crash pad in 5 minutes and had dinner plans with 3 other FAs before my bags hit the carousel."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">J</div>
+            <div>
+              <div class="testimonial-name">Jasmine T.</div>
+              <div class="testimonial-role">Flight Attendant · Delta</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"The TSA alerts alone are worth it. I get real-time wait times posted by crew actually IN the airport. No more guessing."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">M</div>
+            <div>
+              <div class="testimonial-name">Capt. Marcus R.</div>
+              <div class="testimonial-role">Captain · United Airlines</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card testimonial-card-featured">
+          <div class="stars">★★★★★</div>
+          <p>"Finally an app that actually gets crew life. The community is welcoming, the alerts are accurate, and the marketplace saved me $200 a month on crash pads."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <div class="testimonial-name">Sofia K.</div>
+              <div class="testimonial-role">Senior FA · Emirates</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"Best networking tool in crew. Found 3 bases to pick up extra trips through the marketplace. Paid for premium in one trip."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">D</div>
+            <div>
+              <div class="testimonial-name">Dana L.</div>
+              <div class="testimonial-role">First Officer · American</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"The Vent Room is exactly what this industry needed. Finally a place to be real about crew life without it following me around. Brilliant concept."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">A</div>
+            <div>
+              <div class="testimonial-name">Anonymous Crew ✈️</div>
+              <div class="testimonial-role">FA · Major US Carrier</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonials-dots" id="testimonialsDots"></div>
+  </section>
+
+  <!-- ============ DOWNLOAD CTA ============ -->
+  <section class="download-section" id="download">
+    <div class="download-bg-orb"></div>
+    <div class="download-content reveal-up">
+      <img src="logo_cropped.png" class="download-logo" alt="YoFly Crew" />
+      <h2 class="section-title">Ready to <span class="gradient-text">take off?</span></h2>
+      <p>YoFly Crew is launching now — join the first app built exclusively for pilots and flight attendants. Free at launch for all verified crew.</p>
+      <div class="store-buttons">
+        <a href="#" class="store-btn" id="appStoreBtn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-1.19.74-1.97 1.94-1.95 3.37.03 1.73 1.01 2.93 2.22 3.63-.3.89-.65 1.81-1.02 2.62zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <div>
+            <div class="store-label">Download on the</div>
+            <div class="store-name">App Store</div>
+          </div>
+        </a>
+        <a href="#" class="store-btn" id="googlePlayBtn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.37.21.8.24 1.2.09l13.02-7.52-2.76-2.76-11.46 10.19zm-1.12-20.4C1.85 3.77 2.06 4.4 2.06 5.2v13.6c0 .8.21 1.43.52 1.84l.1.09 7.62-7.62v-.2L2.06 5.27l.0-.01zM20.16 9.95l-2.58-1.49-3.07 3.06 3.07 3.07 2.6-1.5c.74-.43.74-1.14-.02-1.63v-.01zM4.38.24L17.4 7.76l-2.76 2.76-11.46-10.19C3.58.12 4.0.02 4.38.24z"/></svg>
+          <div>
+            <div class="store-label">Get it on</div>
+            <div class="store-name">Google Play</div>
+          </div>
+        </a>
+      </div>
+      <div class="download-note">Free forever · Verified crew only · No credit card required</div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="footer-logo" />
+        <div class="footer-brand-text">
+          <div class="footer-tagline">Built for pilots &amp; flight attendants.</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Product</div>
+          <a href="features.html">Features</a>
+          <a href="community.html">Community</a>
+          <a href="marketplace.html">Marketplace</a>
+          <a href="alerts.html">Alerts</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <a href="about.html">About Us</a>
+          <a href="support.html">Support</a>
+          <a href="careers.html">Careers</a>
+          <a href="press.html">Press</a>
+          <a href="investors.html">Investors</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="cookies.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

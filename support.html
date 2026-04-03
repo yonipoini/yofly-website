@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support — YoFly Crew</title>
+  <meta name="description" content="Get help and support for the YoFly Crew platform." />
+  <link rel="icon" href="logo_cropped.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav scrolled" id="nav">
+    <canvas class="nav-canvas" id="navCanvas"></canvas>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="features.html">Features</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="alerts.html">Alerts</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="index.html#download" class="btn btn-ghost">Sign In</a>
+        <a href="index.html#download" class="btn btn-primary">Get the App</a>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+      <li><a href="community.html" class="mobile-nav-link">Community</a></li>
+      <li><a href="marketplace.html" class="mobile-nav-link">Marketplace</a></li>
+      <li><a href="alerts.html" class="mobile-nav-link">Alerts</a></li>
+      <li><a href="index.html#download" class="mobile-nav-link btn btn-primary">Get the App</a></li>
+    </ul>
+  </div>
+
+  <!-- ============ SUBPAGE HERO ============ -->
+  <section class="subpage-hero">
+    <div class="hero-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="reveal-up">
+      <div class="section-badge">Help Center</div>
+      <h1 class="hero-title">How can we <span class="gradient-text">help?</span></h1>
+      <p class="hero-subtitle">Our support team is always on standby for our crew members.</p>
+    </div>
+  </section>
+
+  <!-- ============ PAGE CONTENT ============ -->
+  <main class="page-content">
+    <div class="reveal-up">
+      <h2>General Support</h2>
+      <p>If you're having trouble with your account, verification, or have questions about how to use YoFly Crew, our support team is here for you 24/7 across every time zone.</p>
+      <p>Reach out directly at <a href="mailto:admin@yoflycrew.com" style="color: var(--accent);">admin@yoflycrew.com</a>.</p>
+    </div>
+
+    <div class="reveal-up" style="margin-top: 60px;">
+      <h3>Common Support Topics</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 32px; margin-top: 30px;">
+        <div class="content-card">
+          <h4>Verification Help</h4>
+          <p>Having trouble uploading your crew ID? Ensure the photo is clear and all details are visible. Most accounts are verified within 2-4 hours.</p>
+        </div>
+        <div class="content-card">
+          <h4>Account Security</h4>
+          <p>Learn how we protect your professional data and how to manage your privacy settings within the Vent Room.</p>
+        </div>
+        <div class="content-card">
+          <h4>Marketplace Safety</h4>
+          <p>Best practices for safe trades and verifying fellow crew members before exchange.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="footer-logo" />
+        <div class="footer-brand-text">
+          <div class="footer-tagline">Built for pilots &amp; flight attendants.</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Product</div>
+          <a href="features.html">Features</a>
+          <a href="community.html">Community</a>
+          <a href="marketplace.html">Marketplace</a>
+          <a href="alerts.html">Alerts</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <a href="about.html">About Us</a>
+          <a href="support.html">Support</a>
+          <a href="careers.html">Careers</a>
+          <a href="press.html">Press</a>
+          <a href="investors.html">Investors</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="cookies.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

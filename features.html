@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Features — YoFly Crew</title>
+  <meta name="description" content="Explore the powerful features of YoFly Crew, the ultimate app for crew members." />
+  <link rel="icon" href="logo_cropped.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav scrolled" id="nav">
+    <canvas class="nav-canvas" id="navCanvas"></canvas>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="features.html" class="active">Features</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="alerts.html">Alerts</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="index.html#download" class="btn btn-ghost">Sign In</a>
+        <a href="index.html#download" class="btn btn-primary">Get the App</a>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+      <li><a href="community.html" class="mobile-nav-link">Community</a></li>
+      <li><a href="marketplace.html" class="mobile-nav-link">Marketplace</a></li>
+      <li><a href="alerts.html" class="mobile-nav-link">Alerts</a></li>
+      <li><a href="index.html#download" class="mobile-nav-link btn btn-primary">Get the App</a></li>
+    </ul>
+  </div>
+
+  <!-- ============ SUBPAGE HERO ============ -->
+  <section class="subpage-hero">
+    <div class="hero-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="reveal-up">
+      <div class="section-badge">Product</div>
+      <h1 class="hero-title">Powerful <span class="gradient-text">Features</span></h1>
+      <p class="hero-subtitle">Everything you need to navigate crew life, built by pilots and flight attendants who've been there.</p>
+    </div>
+  </section>
+
+  <!-- ============ PAGE CONTENT ============ -->
+  <main class="page-content">
+    <div class="content-grid reveal-up">
+      <div class="content-text">
+        <h2>Real-Time Crew Intelligence</h2>
+        <p>Stay ahead of the game with live updates from your fellow crew members. No more guessing TSA wait times or wondering where the best crew discount is.</p>
+        <div class="content-card">
+          <h3>Layover Alerts</h3>
+          <p>Get instant notifications about gate changes, lounge status, and security line wait times, all crowd-sourced from crew currently on the ground.</p>
+        </div>
+      </div>
+      <div class="content-card reveal-up delay-1">
+        <div class="feature-icon-big">🛎️</div>
+        <div class="alert-pill">🟢 JFK T4: 8-min wait</div>
+        <div class="alert-pill">🔴 LAX TBIT: Heavy crew line</div>
+        <div class="alert-pill">⭐ MIA: 20% Crew discount at Starbucks</div>
+      </div>
+    </div>
+
+    <div class="content-grid reveal-up">
+      <div class="content-card" style="grid-row: 1; grid-column: 1">
+        <div class="feature-icon-big">🗺️</div>
+        <div style="background: rgba(0,255,255,0.1); border-radius: 12px; height: 150px; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--accent);">
+          <span style="color: var(--accent); font-weight: 600;">Interactive Map View</span>
+        </div>
+      </div>
+      <div class="content-text" style="grid-column: 2">
+        <h2>Smart Crew Maps</h2>
+        <p>Access our proprietary layers built for the unique needs of crew members.. Find what you need exactly when you land.</p>
+        <div class="content-card">
+          <h3>Local Hotspots</h3>
+          <p>Explore city-curated maps featuring crew-recommended restaurants, gyms with day passes, and safe walking routes during layovers.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid reveal-up">
+      <div class="content-text">
+        <h2>Peer-to-Peer Marketplace</h2>
+        <p>Trade with people you trust. The YoFly Marketplace is verified-crew only, ensuring safer transactions and better deals.</p>
+      </div>
+      <div class="content-card">
+        <div class="feature-icon-big">🛏️</div>
+        <h3>Crash Pad Directory</h3>
+        <p>The largest curated directory of crash pads integratedly. Filter by commute time, amenities, and price — all managed by our community.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="footer-logo" />
+        <div class="footer-brand-text">
+          <div class="footer-tagline">Built for pilots &amp; flight attendants.</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Product</div>
+          <a href="features.html">Features</a>
+          <a href="community.html">Community</a>
+          <a href="marketplace.html">Marketplace</a>
+          <a href="alerts.html">Alerts</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <a href="about.html">About Us</a>
+          <a href="support.html">Support</a>
+          <a href="careers.html">Careers</a>
+          <a href="press.html">Press</a>
+          <a href="investors.html">Investors</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="cookies.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

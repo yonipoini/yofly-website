@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Press — YoFly Crew</title>
+  <meta name="description" content="View the YoFly Crew media kit and latest press releases." />
+  <link rel="icon" href="logo_cropped.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav scrolled" id="nav">
+    <canvas class="nav-canvas" id="navCanvas"></canvas>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="features.html">Features</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="alerts.html">Alerts</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="index.html#download" class="btn btn-ghost">Sign In</a>
+        <a href="index.html#download" class="btn btn-primary">Get the App</a>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+      <li><a href="community.html" class="mobile-nav-link">Community</a></li>
+      <li><a href="marketplace.html" class="mobile-nav-link">Marketplace</a></li>
+      <li><a href="alerts.html" class="mobile-nav-link">Alerts</a></li>
+      <li><a href="index.html#download" class="mobile-nav-link btn btn-primary">Get the App</a></li>
+    </ul>
+  </div>
+
+  <!-- ============ SUBPAGE HERO ============ -->
+  <section class="subpage-hero">
+    <div class="hero-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="reveal-up">
+      <div class="section-badge">Media Kit</div>
+      <h1 class="hero-title">Press <span class="gradient-text">Room</span></h1>
+      <p class="hero-subtitle">Official resources and news updates for media partners and crew industry analysts.</p>
+    </div>
+  </section>
+
+  <!-- ============ PAGE CONTENT ============ -->
+  <main class="page-content">
+    <div class="reveal-up">
+      <h2>Media Inquiries</h2>
+      <p>For all press and media requests, please contact our communications team at <a href="mailto:admin@yoflycrew.com" style="color: var(--accent);">admin@yoflycrew.com</a>. We'll do our best to respond within one business day.</p>
+    </div>
+
+    <div class="content-grid reveal-up">
+      <div class="content-text">
+        <h3>Official Assets</h3>
+        <p>Download our official brand media kit including high-resolution logo files and approved app screenshots for editorial use.</p>
+        <a href="#" class="btn btn-primary">Download Media Kit (ZIP)</a>
+      </div>
+      <div class="content-card">
+        <img src="logo_cropped.png" style="width: 200px; opacity: 0.5; margin: 0 auto;" />
+      </div>
+    </div>
+
+    <div class="reveal-up" style="margin-top: 60px;">
+      <h3>Recent Press Releases</h3>
+      <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 30px;">
+        <div class="content-card">
+          <div style="font-size: 0.8rem; color: var(--accent); margin-bottom: 8px;">February 15, 2026</div>
+          <h4>YoFly Crew Launches Live Alert Engine for Real-Time Airport Intel</h4>
+          <p>YoFly Crew, the leading social platform for crew members, today announced the launch of its integrated alert engine...</p>
+        </div>
+        <div class="content-card">
+          <div style="font-size: 0.8rem; color: var(--accent); margin-bottom: 8px;">January 12, 2026</div>
+          <h4>The Largest Integrated Crash Pad Directory Now Live on YoFly Marketplace</h4>
+          <p>YoFly Crew announced a major expansion of its marketplace today, featuring the industry's most comprehensive and verified crash pad directory.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="footer-logo" />
+        <div class="footer-brand-text">
+          <div class="footer-tagline">Built for pilots &amp; flight attendants.</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Product</div>
+          <a href="features.html">Features</a>
+          <a href="community.html">Community</a>
+          <a href="marketplace.html">Marketplace</a>
+          <a href="alerts.html">Alerts</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <a href="about.html">About Us</a>
+          <a href="support.html">Support</a>
+          <a href="careers.html">Careers</a>
+          <a href="press.html">Press</a>
+          <a href="investors.html">Investors</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="cookies.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
