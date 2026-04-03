@@ -8,39 +8,10 @@ const SUPABASE_URL = 'https://ttjbpmdivtbaagkyszmb.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0amJwbWRpdnRiYWFna3lzem1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNTE3MjUsImV4cCI6MjA5MDgyNzcyNX0.Pi6ZyX8nXqMh5rpOX6Dyrsz3y0Vq-Y5eDzoqihVIemc';
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-// ============ 2. AUTH & MODAL LOGIC ============
-const loginModal = document.getElementById('loginModal');
-const loginModalClose = document.getElementById('loginModalClose');
+// ============ 2. SIGN-IN LOGIC ============
 const loginForm = document.getElementById('loginForm');
 const loginMessage = document.getElementById('loginMessage');
 
-function openLoginModal(e) {
-  if (e) e.preventDefault();
-  if (loginModal) loginModal.classList.add('open');
-}
-
-function closeLoginModal() {
-  if (loginModal) loginModal.classList.remove('open');
-  if (loginMessage) loginMessage.textContent = '';
-}
-
-if (loginModalClose) {
-  loginModalClose.addEventListener('click', closeLoginModal);
-}
-
-// Close modal on background click
-window.addEventListener('click', (e) => {
-  if (e.target === loginModal) closeLoginModal();
-});
-
-// Update all Login/CTA buttons
-document.querySelectorAll('a[href="#download"], a[href*="index.html#download"], .nav-cta .btn').forEach(btn => {
-  if (btn.textContent.includes('Sign In') || btn.textContent.includes('Get the App')) {
-    btn.addEventListener('click', openLoginModal);
-  }
-});
-
-// Magic Link Auth
 if (loginForm && supabaseClient) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -49,8 +20,10 @@ if (loginForm && supabaseClient) {
     
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
-    loginMessage.textContent = 'Connecting to crew server...';
-    loginMessage.style.color = 'var(--text-muted)';
+    if (loginMessage) {
+      loginMessage.textContent = 'Connecting to crew server...';
+      loginMessage.style.color = 'var(--text-muted)';
+    }
 
     const { error } = await supabaseClient.auth.signInWithOtp({
       email: email,
@@ -58,23 +31,18 @@ if (loginForm && supabaseClient) {
     });
 
     if (error) {
-      loginMessage.textContent = 'Error: ' + error.message;
-      loginMessage.style.color = '#ff4b4b';
+      if (loginMessage) {
+        loginMessage.textContent = 'Error: ' + error.message;
+        loginMessage.style.color = '#ff4b4b';
+      }
       submitBtn.disabled = false;
       submitBtn.textContent = 'Send Magic Link';
     } else {
-      loginMessage.textContent = 'Check your email for the Magic Link!';
-      loginMessage.style.color = 'var(--accent)';
+      if (loginMessage) {
+        loginMessage.textContent = 'Check your email for the Magic Link!';
+        loginMessage.style.color = 'var(--accent)';
+      }
       loginForm.style.display = 'none';
-      setTimeout(() => {
-        closeLoginModal();
-        setTimeout(() => {
-          loginForm.style.display = 'block';
-          loginForm.reset();
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Magic Link';
-        }, 500);
-      }, 3000);
     }
   });
 }
@@ -84,7 +52,7 @@ if (supabaseClient) {
   supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session) {
       const isProfilePage = window.location.pathname.includes('profile.html');
-      const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '';
+      const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.endsWith('login.html');
       if (isHomePage) window.location.href = 'profile.html';
     }
     
