@@ -77,9 +77,24 @@
       <div class="content-text">
         <h2>The Vent Room</h2>
         <p>A safe, anonymous space built specifically for crew members. No judgment, no exposure.</p>
-        <div class="content-card">
-          <h3>Real Conversations</h3>
-          <p>Whether you're venting about a long day, sharing industry tips, or asking questions you'd only ask a fellow crew member, the Vent Room is here for you.</p>
+        
+        <!-- ============ POST BOX ============ -->
+        <div class="content-card" id="ventPostBox" style="margin-bottom: 30px; display: none;">
+          <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--grad-primary); flex-shrink: 0;"></div>
+            <textarea id="ventInput" placeholder="What's on your mind, crew?" style="width: 100%; height: 80px; background: transparent; border: none; color: white; resize: none; font-family: inherit; font-size: 1.1em;" maxlength="280"></textarea>
+          </div>
+          <div style="display: flex; justify-content: flex-end;">
+            <button id="postVentBtn" class="btn btn-primary btn-sm">Post Vent</button>
+          </div>
+        </div>
+
+        <!-- ============ DYNAMIC FEED ============ -->
+        <div id="ventFeed" class="vent-feed" style="display: grid; gap: 20px;">
+          <!-- Items will be injected here -->
+          <div class="content-card" style="opacity: 0.5; text-align: center; padding: 40px;">
+            <p>Loading real-time crew vents...</p>
+          </div>
         </div>
       </div>
       <div class="content-card">

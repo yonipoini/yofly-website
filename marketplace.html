@@ -73,6 +73,20 @@
 
   <!-- ============ PAGE CONTENT ============ -->
   <main class="page-content">
+    <div class="reveal-up">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <h2>Crew Exchange</h2>
+        <button id="listItemBtn" class="btn btn-primary" style="display: none;">+ List Item</button>
+      </div>
+
+      <div id="marketplaceFeed" class="content-grid">
+        <!-- Dynamic items will be injected here -->
+        <div class="content-card" style="grid-column: 1 / -1; opacity: 0.5; text-align: center; padding: 60px;">
+          <p>Fetching the latest crew gear...</p>
+        </div>
+      </div>
+    </div>
+
     <div class="content-grid reveal-up">
       <div class="content-text">
         <h2>Crash Pad Directory</h2>

@@ -802,3 +802,212 @@ document.querySelectorAll('.feature-card').forEach(card => {
 
 // Trigger initial reveals for items in view
 window.dispatchEvent(new Event('scroll'));
+
+// ============ SUPABASE CONFIG ============
+// IMPORTANT: Replace these with your actual Supabase Project API keys
+const SUPABASE_URL = 'https://ttjbpmdivtbaagkyszmb.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0amJwbWRpdnRiYWFna3lzem1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNTE3MjUsImV4cCI6MjA5MDgyNzcyNX0.Pi6ZyX8nXqMh5rpOX6Dyrsz3y0Vq-Y5eDzoqihVIemc';
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+// ============ AUTH MODAL LOGIC ============
+const loginModal = document.getElementById('loginModal');
+const loginModalClose = document.getElementById('loginModalClose');
+const loginForm = document.getElementById('loginForm');
+const loginMessage = document.getElementById('loginMessage');
+
+function openLoginModal(e) {
+  if (e) e.preventDefault();
+  if (loginModal) loginModal.classList.add('open');
+}
+
+function closeLoginModal() {
+  if (loginModal) loginModal.classList.remove('open');
+  if (loginMessage) loginMessage.textContent = '';
+}
+
+if (loginModalClose) {
+  loginModalClose.addEventListener('click', closeLoginModal);
+}
+
+// Close modal on background click
+window.addEventListener('click', (e) => {
+  if (e.target === loginModal) closeLoginModal();
+});
+
+// Update all "Sign In" and "Get the App" buttons to open modal
+document.querySelectorAll('a[href="#download"], a[href="index.html#download"], .nav-cta .btn').forEach(btn => {
+  if (btn.textContent.includes('Sign In') || btn.textContent.includes('Get the App')) {
+    btn.addEventListener('click', openLoginModal);
+  }
+});
+
+// Handle Login Form
+if (loginForm && supabaseClient) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const submitBtn = loginForm.querySelector('button');
+    
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    loginMessage.textContent = 'Connecting to crew server...';
+    loginMessage.style.color = 'var(--text-muted)';
+
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email: email,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
+
+    if (error) {
+      loginMessage.textContent = 'Error: ' + error.message;
+      loginMessage.style.color = '#ff4b4b';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Magic Link';
+    } else {
+      loginMessage.textContent = 'Check your email for the Magic Link!';
+      loginMessage.style.color = 'var(--accent)';
+      loginForm.style.display = 'none';
+      setTimeout(() => {
+        closeLoginModal();
+        setTimeout(() => {
+          loginForm.style.display = 'block';
+          loginForm.reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Magic Link';
+        }, 500);
+      }, 3000);
+    }
+  });
+}
+
+// ============ AUTH STATE LISTENER ============
+if (supabaseClient) {
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      // If we are on the home page or verification page, go to profile
+      if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
+        window.location.href = 'profile.html';
+      }
+    }
+    if (event === 'SIGNED_OUT') {
+      if (window.location.pathname.endsWith('profile.html')) {
+        window.location.href = 'index.html';
+      }
+    }
+  });
+}
+
+// ============ COMMUNITY & MARKETPLACE LOGIC ============
+
+async function fetchVents() {
+  const ventFeed = document.getElementById('ventFeed');
+  if (!ventFeed || !supabaseClient) return;
+
+  const { data, error } = await supabaseClient
+    .from('vent_posts')
+    .select('*, profiles(role, airline)')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    ventFeed.innerHTML = '<p style="color: #ff4b4b;">Error loading vents.</p>';
+    return;
+  }
+
+  if (data.length === 0) {
+    ventFeed.innerHTML = '<div class="content-card" style="text-align: center; opacity: 0.5;">No vents yet. Be the first to share!</div>';
+    return;
+  }
+
+  ventFeed.innerHTML = data.map(post => `
+    <div class="content-card reveal-up visible">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.85em; opacity: 0.6;">
+        <span>${post.profiles?.role || 'Crew Member'} • ${post.profiles?.airline || 'Verified Account'}</span>
+        <span>${new Date(post.created_at).toLocaleDateString()}</span>
+      </div>
+      <p style="font-size: 1.1em; line-height: 1.5;">${post.content}</p>
+    </div>
+  `).join('');
+}
+
+async function fetchListings() {
+  const marketplaceFeed = document.getElementById('marketplaceFeed');
+  if (!marketplaceFeed || !supabaseClient) return;
+
+  const { data, error } = await supabaseClient
+    .from('marketplace_listings')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    marketplaceFeed.innerHTML = '<p style="color: #ff4b4b;">Error loading marketplace.</p>';
+    return;
+  }
+
+  if (data.length === 0) {
+    marketplaceFeed.innerHTML = '<div class="content-card" style="grid-column: 1/-1; text-align: center; opacity: 0.5;">No items listed yet.</div>';
+    return;
+  }
+
+  marketplaceFeed.innerHTML = data.map(item => `
+    <div class="content-card reveal-up visible">
+      <div class="card-image" style="background-image: url('${item.image_url || 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&q=80&w=800'}')"></div>
+      <div class="card-tag">${item.category || 'Gear'}</div>
+      <h3>${item.title}</h3>
+      <p class="price">$${item.price}</p>
+      <p>${item.description}</p>
+      <a href="#" class="btn btn-ghost" style="margin-top: 20px;">Contact Seller</a>
+    </div>
+  `).join('');
+}
+
+// Logic to show/hide post UI based on auth
+if (supabaseClient) {
+  supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    const ventPostBox = document.getElementById('ventPostBox');
+    const listItemBtn = document.getElementById('listItemBtn');
+    
+    if (session) {
+      // Check if verified
+      const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('is_verified')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profile && profile.is_verified) {
+        if (ventPostBox) ventPostBox.style.display = 'block';
+        if (listItemBtn) listItemBtn.style.display = 'inline-flex';
+      }
+    }
+  });
+}
+
+// Vent Posting
+const postVentBtn = document.getElementById('postVentBtn');
+if (postVentBtn) {
+  postVentBtn.addEventListener('click', async () => {
+    const content = document.getElementById('ventInput').value;
+    if (!content) return;
+
+    postVentBtn.disabled = true;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    
+    const { error } = await supabaseClient
+      .from('vent_posts')
+      .insert([{ content, user_id: user.id }]);
+
+    if (!error) {
+      document.getElementById('ventInput').value = '';
+      fetchVents();
+    }
+    postVentBtn.disabled = false;
+  });
+}
+
+// Initial Fetch
+window.addEventListener('DOMContentLoaded', () => {
+  fetchVents();
+  fetchListings();
+});
