@@ -1425,3 +1425,45 @@ body:hover .cursor-follower { opacity: 0.5; }
 @media (pointer: coarse), (hover: none) {
   #cursor, #cursorFollower { display: none !important; }
 }
+
+/* ============ MODALS ============ */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: var(--transition);
+}
+.modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal-content {
+  width: 90%;
+  max-width: 450px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+.modal-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.modal-close:hover { color: var(--primary); }

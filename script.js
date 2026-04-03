@@ -3,6 +3,102 @@
    Scroll animations · Particles · Counter · Cursor · Carousel
    ============================================================ */
 
+// ============ SUPABASE CONFIG ============
+// IMPORTANT: Replace these with your actual Supabase Project API keys
+const SUPABASE_URL = 'https://ttjbpmdivtbaagkyszmb.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0amJwbWRpdnRiYWFna3lzem1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNTE3MjUsImV4cCI6MjA5MDgyNzcyNX0.Pi6ZyX8nXqMh5rpOX6Dyrsz3y0Vq-Y5eDzoqihVIemc';
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+// ============ AUTH MODAL LOGIC ============
+const loginModal = document.getElementById('loginModal');
+const loginModalClose = document.getElementById('loginModalClose');
+const loginForm = document.getElementById('loginForm');
+const loginMessage = document.getElementById('loginMessage');
+
+function openLoginModal(e) {
+  if (e) e.preventDefault();
+  if (loginModal) loginModal.classList.add('open');
+}
+
+function closeLoginModal() {
+  if (loginModal) loginModal.classList.remove('open');
+  if (loginMessage) loginMessage.textContent = '';
+}
+
+if (loginModalClose) {
+  loginModalClose.addEventListener('click', closeLoginModal);
+}
+
+// Close modal on background click
+window.addEventListener('click', (e) => {
+  if (e.target === loginModal) closeLoginModal();
+});
+
+// Update all "Sign In" and "Get the App" buttons to open modal
+document.querySelectorAll('a[href="#download"], a[href="index.html#download"], .nav-cta .btn').forEach(btn => {
+  if (btn.textContent.includes('Sign In') || btn.textContent.includes('Get the App')) {
+    btn.addEventListener('click', openLoginModal);
+  }
+});
+
+// Handle Login Form
+if (loginForm && supabase) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const submitBtn = loginForm.querySelector('button');
+    
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    loginMessage.textContent = 'Connecting to crew server...';
+    loginMessage.style.color = 'var(--text-muted)';
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
+
+    if (error) {
+      loginMessage.textContent = 'Error: ' + error.message;
+      loginMessage.style.color = '#ff4b4b';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Magic Link';
+    } else {
+      loginMessage.textContent = 'Check your email for the Magic Link!';
+      loginMessage.style.color = 'var(--accent)';
+      loginForm.style.display = 'none';
+      setTimeout(() => {
+        closeLoginModal();
+        setTimeout(() => {
+          loginForm.style.display = 'block';
+          loginForm.reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Magic Link';
+        }, 500);
+      }, 3000);
+    }
+  });
+}
+
+// ============ AUTH STATE LISTENER ============
+if (supabase) {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      // If we are on the home page or verification page, go to profile
+      if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+        window.location.href = 'profile.html';
+      }
+    }
+    if (event === 'SIGNED_OUT') {
+      if (window.location.pathname.endsWith('profile.html')) {
+        window.location.href = 'index.html';
+      }
+    }
+  });
+}
+
 // ============ CUSTOM CURSOR ============
 const cursor = document.getElementById('cursor');
 const cursorFollower = document.getElementById('cursorFollower');

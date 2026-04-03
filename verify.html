@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verification — YoFly Crew</title>
+  <meta name="description" content="Verify your professional crew status on YoFly Crew." />
+  <link rel="icon" href="logo_cropped.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav scrolled" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="features.html">Features</a></li>
+        <li><a href="profile.html">My Profile</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="profile.html" class="btn btn-ghost">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ SUBPAGE HERO ============ -->
+  <section class="subpage-hero">
+    <div class="hero-grid"></div>
+    <div class="orb orb-2"></div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="reveal-up">
+      <div class="section-badge">Safety & Trust</div>
+      <h1 class="hero-title">Get <span class="gradient-text">Verified</span></h1>
+      <p class="hero-subtitle">Our community is 100% verified to keep it safe for crewmembers only.</p>
+    </div>
+  </section>
+
+  <!-- ============ VERIFY CONTENT ============ -->
+  <main class="page-content">
+    <div class="reveal-up">
+      <div class="content-card" style="max-width: 800px; margin: 0 auto; padding: 50px;">
+        <h2>How it works</h2>
+        <p style="margin-bottom: 40px; opacity: 0.7;">To join the Vent Room and Marketplace, we need to confirm you are an active airline employee.</p>
+
+        <div style="display: grid; gap: 40px;">
+          <div class="content-card" style="padding: 30px; border: 1px solid var(--border); background: var(--surface-2);">
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+              <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--grad-accent); display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+              <h3>Choose your role</h3>
+            </div>
+            <p>Ensure your profile correctly lists your position as Pilot or Flight Attendant.</p>
+          </div>
+
+          <div class="content-card" style="padding: 30px; border: 1px solid var(--border); background: var(--surface-2);">
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+              <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--grad-accent); display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+              <h3>Upload Evidence</h3>
+            </div>
+            <p style="margin-bottom: 20px;">Upload a clear photo of your current airline ID card. We blur all sensitive info and only look for your name and company logo.</p>
+            <div style="height: 150px; border: 2px dashed var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+              <span style="opacity: 0.5;">Click to upload (PNG, JPG)</span>
+            </div>
+          </div>
+
+          <div class="content-card" style="padding: 30px; border: 1px solid var(--border); background: var(--surface-2);">
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+              <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--grad-accent); display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+              <h3>Manual Review</h3>
+            </div>
+            <p>A member of our crew team will review your ID within 2-4 hours. You'll receive an email once your blue checkmark is active!</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 50px; text-align: center;">
+          <button class="btn btn-primary btn-large">Submit for Review</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
