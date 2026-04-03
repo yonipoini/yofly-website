@@ -11,6 +11,12 @@ const supabaseClient =
   window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
+const PRODUCTION_ORIGIN = 'https://www.yoflycrew.com';
+const AUTH_REDIRECT_ORIGIN =
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? PRODUCTION_ORIGIN
+    : window.location.origin;
+const AUTH_REDIRECT_URL = `${AUTH_REDIRECT_ORIGIN}/profile`;
 
 const pageName = window.location.pathname.split('/').pop() || 'index.html';
 const isLoginPage = pageName === 'login.html';
@@ -444,7 +450,7 @@ function bindLoginForm() {
     const { error } = await supabaseClient.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/profile`,
+        emailRedirectTo: AUTH_REDIRECT_URL,
         shouldCreateUser: isRegisterMode,
       },
     });
