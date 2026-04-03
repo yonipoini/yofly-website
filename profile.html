@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile — YoFly Crew</title>
-  <meta name="description" content="Manage your YoFly Crew profile and professional status." />
+  <title>Dashboard — YoFly Crew</title>
+  <meta name="description" content="Your YoFly Crew dashboard for profile settings, community activity, and marketplace presence." />
   <link rel="icon" href="logo_cropped.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,11 +14,9 @@
 </head>
 <body>
 
-  <!-- ============ CURSOR ============ -->
   <div class="cursor" id="cursor"></div>
   <div class="cursor-follower" id="cursorFollower"></div>
 
-  <!-- ============ NAV ============ -->
   <nav class="nav scrolled" id="nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
@@ -31,70 +29,171 @@
         <li><a href="alerts.html">Alerts</a></li>
       </ul>
       <div class="nav-cta" id="navAuth">
-        <button class="btn btn-ghost" id="signOutBtn">Sign Out</button>
+        <a href="community.html" class="btn btn-ghost">Community</a>
+        <button class="btn btn-primary" id="signOutBtn" type="button">Sign Out</button>
       </div>
     </div>
   </nav>
 
-  <!-- ============ SUBPAGE HERO ============ -->
   <section class="subpage-hero">
     <div class="hero-grid"></div>
     <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
     <canvas class="particles-canvas" id="particlesCanvas"></canvas>
 
     <div class="reveal-up">
-      <div class="section-badge">Member Profile</div>
-      <h1 class="hero-title">Welcome <span class="gradient-text">Crewmember</span></h1>
-      <p class="hero-subtitle">Complete your profile to unlock exclusive community features.</p>
+      <div class="section-badge">Member Dashboard</div>
+      <h1 class="hero-title"><span id="profileHeroName">Crew Member</span> <span class="gradient-text">Dashboard</span></h1>
+      <p class="hero-subtitle" id="profileHeroSubtitle">Shared profile, real-time community activity, and marketplace visibility all in one place.</p>
     </div>
   </section>
 
-  <!-- ============ PROFILE CONTENT ============ -->
-  <main class="page-content">
-    <div class="reveal-up">
-      <div class="content-card" style="max-width: 800px; margin: 0 auto; padding: 50px;">
-        <div style="text-align: center; margin-bottom: 40px;">
-          <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--grad-primary); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px;">✈️</div>
-          <h2 id="profileEmail">...</h2>
-          <div class="section-badge" style="margin-top: 10px; background: rgba(255, 255, 255, 0.05);">Pending Verification</div>
+  <main class="page-content dashboard-page">
+    <section class="dashboard-grid reveal-up">
+      <div class="dashboard-panel dashboard-account-card">
+        <div class="dashboard-account-header">
+          <div class="dashboard-avatar">✈️</div>
+          <div>
+            <h2 id="profileEmail">Loading...</h2>
+            <p class="dashboard-account-meta" id="profileMeta">Checking your shared crew profile...</p>
+          </div>
         </div>
 
-        <form id="profileForm" style="display: grid; gap: 20px;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="dashboard-badges">
+          <div class="section-badge" id="verificationBadge">Unverified</div>
+          <div class="section-badge dashboard-badge-muted" id="marketplaceBadge">Marketplace Pending</div>
+        </div>
+
+        <div class="dashboard-info-grid">
+          <div class="dashboard-mini-card">
+            <div class="dashboard-mini-label">Base Airport</div>
+            <div class="dashboard-mini-value" id="baseAirportValue">JFK</div>
+          </div>
+          <div class="dashboard-mini-card">
+            <div class="dashboard-mini-label">Aircraft</div>
+            <div class="dashboard-mini-value" id="aircraftValue">Not set</div>
+          </div>
+          <div class="dashboard-mini-card">
+            <div class="dashboard-mini-label">Airline</div>
+            <div class="dashboard-mini-value" id="airlineValue">Not set</div>
+          </div>
+          <div class="dashboard-mini-card">
+            <div class="dashboard-mini-label">Role</div>
+            <div class="dashboard-mini-value" id="roleValue">Not set</div>
+          </div>
+        </div>
+
+        <div class="dashboard-preferences">
+          <div class="dashboard-chip" id="opsChip">Ops context loading</div>
+          <div class="dashboard-chip" id="mapChip">Crew map loading</div>
+          <div class="dashboard-chip" id="intelChip">Intel loading</div>
+        </div>
+      </div>
+
+      <div class="dashboard-stats-grid">
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Posts</span>
+          <span class="dashboard-stat-value" id="totalPostsValue">0</span>
+        </div>
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Vents</span>
+          <span class="dashboard-stat-value" id="ventPostsValue">0</span>
+        </div>
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Saved</span>
+          <span class="dashboard-stat-value" id="savedPostsValue">0</span>
+        </div>
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Listings</span>
+          <span class="dashboard-stat-value" id="totalListingsValue">0</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-main-grid reveal-up">
+      <div class="dashboard-panel">
+        <div class="dashboard-section-header">
+          <div>
+            <div class="section-badge">Profile</div>
+            <h3>Update Member Details</h3>
+          </div>
+          <p class="dashboard-section-copy">These fields sync with the shared app profile too.</p>
+        </div>
+
+        <form id="profileForm" class="dashboard-form">
+          <div class="dashboard-form-grid">
             <div>
-              <label style="display: block; margin-bottom: 10px; font-size: 0.9em; opacity: 0.7;">Full Name</label>
-              <input type="text" placeholder="John Doe" style="width: 100%; padding: 15px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); color: white;" />
+              <label class="dashboard-label" for="fullNameInput">Full Name</label>
+              <input id="fullNameInput" name="full_name" type="text" class="dashboard-input" placeholder="Your full name" />
             </div>
             <div>
-              <label style="display: block; margin-bottom: 10px; font-size: 0.9em; opacity: 0.7;">Airline / Company</label>
-              <input type="text" placeholder="e.g. Delta, Emirates" style="width: 100%; padding: 15px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); color: white;" />
+              <label class="dashboard-label" for="airlineInput">Airline / Company</label>
+              <input id="airlineInput" name="airline" type="text" class="dashboard-input" placeholder="Delta, Emirates, United..." />
+            </div>
+            <div>
+              <label class="dashboard-label" for="baseAirportInput">Base Airport</label>
+              <input id="baseAirportInput" name="base_airport" type="text" class="dashboard-input" placeholder="JFK" maxlength="4" />
+            </div>
+            <div>
+              <label class="dashboard-label" for="aircraftInput">Aircraft / Fleet</label>
+              <input id="aircraftInput" name="aircraft" type="text" class="dashboard-input" placeholder="A320, B737, Widebody..." />
             </div>
           </div>
-          
+
           <div>
-            <label style="display: block; margin-bottom: 10px; font-size: 0.9em; opacity: 0.7;">Primary Role</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-              <label class="content-card" style="cursor: pointer; padding: 20px; text-align: center; border: 1px solid var(--border);">
-                <input type="radio" name="role" value="pilot" style="display: none;" />
-                <div style="font-size: 24px; margin-bottom: 10px;">👨‍✈️</div>
-                <div>Pilot</div>
+            <label class="dashboard-label">Primary Role</label>
+            <div class="dashboard-role-grid">
+              <label class="dashboard-role-card">
+                <input type="radio" name="role" value="PILOT" />
+                <span class="dashboard-role-icon">👨‍✈️</span>
+                <span class="dashboard-role-text">Pilot</span>
               </label>
-              <label class="content-card" style="cursor: pointer; padding: 20px; text-align: center; border: 1px solid var(--border);">
-                <input type="radio" name="role" value="fa" style="display: none;" />
-                <div style="font-size: 24px; margin-bottom: 10px;">💃</div>
-                <div>Flight Attendant</div>
+              <label class="dashboard-role-card">
+                <input type="radio" name="role" value="FA" />
+                <span class="dashboard-role-icon">💃</span>
+                <span class="dashboard-role-text">Flight Attendant</span>
               </label>
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 20px; padding: 18px;">Save Profile</button>
-          <a href="verify.html" class="btn btn-ghost" style="width: 100%; justify-content: center;">Get Verified Now</a>
+          <div class="dashboard-form-actions">
+            <button type="submit" class="btn btn-primary">Save Profile</button>
+            <a href="verify.html" class="btn btn-ghost">Verification Center</a>
+          </div>
+          <div id="profileSaveMessage" class="dashboard-inline-message"></div>
         </form>
       </div>
-    </div>
+
+      <div class="dashboard-stack">
+        <div class="dashboard-panel">
+          <div class="dashboard-section-header">
+            <div>
+              <div class="section-badge">Community</div>
+              <h3>Recent Activity</h3>
+            </div>
+            <a href="community.html" class="gradient-text dashboard-link">Open Community</a>
+          </div>
+          <div id="recentPostsList" class="dashboard-list">
+            <div class="dashboard-empty">Your recent posts will appear here.</div>
+          </div>
+        </div>
+
+        <div class="dashboard-panel">
+          <div class="dashboard-section-header">
+            <div>
+              <div class="section-badge">Marketplace</div>
+              <h3>Recent Listings</h3>
+            </div>
+            <a href="marketplace.html" class="gradient-text dashboard-link">Open Marketplace</a>
+          </div>
+          <div id="recentListingsList" class="dashboard-list">
+            <div class="dashboard-empty">Listings you create will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- ============ FOOTER ============ -->
   <footer class="footer">
     <div class="footer-bottom">
       <span>© 2026 YoFly Crew. All rights reserved.</span>
@@ -102,22 +201,5 @@
   </footer>
 
   <script src="script.js"></script>
-  <script>
-    // Profile-specific logic
-    document.addEventListener('DOMContentLoaded', async () => {
-      if (!supabase) return;
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        window.location.href = 'index.html';
-        return;
-      }
-      document.getElementById('profileEmail').textContent = user.email;
-      
-      document.getElementById('signOutBtn').addEventListener('click', async () => {
-        await supabase.auth.signOut();
-        window.location.href = 'index.html';
-      });
-    });
-  </script>
 </body>
 </html>
