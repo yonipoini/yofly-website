@@ -1231,20 +1231,34 @@ function initHeroFlightMap() {
   }
 
   const hubs = [
-    { key: 'LAX', x: 0.13, y: 0.63, color: '0,255,255' },
-    { key: 'DFW', x: 0.31, y: 0.55, color: '255,0,255' },
-    { key: 'ATL', x: 0.47, y: 0.59, color: '0,255,255' },
-    { key: 'JFK', x: 0.69, y: 0.36, color: '255,255,255' },
-    { key: 'LHR', x: 0.88, y: 0.32, color: '0,255,255' },
+    { key: 'LAX', x: 0.08, y: 0.22, labelDx: 10, labelDy: -12, align: 'left' },
+    { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center' },
+    { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center' },
+    { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center' },
+    { key: 'ATL', x: 0.52, y: 0.18, labelDx: 0, labelDy: -12, align: 'center' },
+    { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center' },
+    { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center' },
+    { key: 'DXB', x: 0.91, y: 0.32, labelDx: -14, labelDy: -12, align: 'right' },
+    { key: 'HND', x: 0.94, y: 0.56, labelDx: -14, labelDy: -12, align: 'right' },
+    { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right' },
   ];
   const routes = [
     [0, 1],
     [1, 2],
     [2, 3],
     [3, 4],
+    [4, 5],
+    [5, 6],
+    [6, 7],
+    [7, 8],
+    [8, 9],
     [0, 2],
-    [1, 3],
-    [2, 4],
+    [1, 4],
+    [2, 5],
+    [3, 6],
+    [4, 7],
+    [5, 8],
+    [6, 9],
   ];
 
   let width = 0;
@@ -1275,7 +1289,7 @@ function initHeroFlightMap() {
     context.beginPath();
     context.moveTo(startX, startY);
     context.quadraticCurveTo(controlX, controlY, endX, endY);
-    context.strokeStyle = 'rgba(255,255,255,0.08)';
+    context.strokeStyle = 'rgba(196, 88, 255, 0.11)';
     context.lineWidth = 1;
     context.setLineDash([7, 9]);
     context.stroke();
@@ -1288,16 +1302,18 @@ function initHeroFlightMap() {
     const y = inv * inv * startY + 2 * inv * t * controlY + t * t * endY;
 
     context.beginPath();
-    context.arc(x, y, 2.8, 0, Math.PI * 2);
-    context.fillStyle = 'rgba(0,255,255,0.95)';
-    context.shadowBlur = 18;
-    context.shadowColor = 'rgba(0,255,255,0.8)';
+    context.arc(x, y, 3.1, 0, Math.PI * 2);
+    context.fillStyle = 'rgba(255, 92, 244, 0.98)';
+    context.shadowBlur = 20;
+    context.shadowColor = 'rgba(194, 82, 255, 0.92)';
     context.fill();
     context.shadowBlur = 0;
   };
 
   const draw = (time) => {
     context.clearRect(0, 0, width, height);
+    const showLabels = width >= 900;
+    const labelSize = width >= 1180 ? 11 : 10;
 
     routes.forEach(([from, to]) => drawRoute(from, to, time));
 
@@ -1305,20 +1321,38 @@ function initHeroFlightMap() {
       const x = hub.x * width;
       const y = hub.y * height;
       const pulse = 0.55 + Math.sin(time * 0.002 + index) * 0.35;
+      const ringRadius = 7 + pulse * 7;
+      const outerRadius = ringRadius + 9;
+      const shimmer = 0.45 + Math.sin(time * 0.0026 + index * 1.2) * 0.3;
 
       context.beginPath();
-      context.arc(x, y, 6 + pulse * 4, 0, Math.PI * 2);
-      context.fillStyle = `rgba(${hub.color}, ${0.08 + pulse * 0.12})`;
+      context.arc(x, y, outerRadius, 0, Math.PI * 2);
+      context.fillStyle = `rgba(164, 70, 255, ${0.04 + pulse * 0.08})`;
       context.fill();
 
       context.beginPath();
-      context.arc(x, y, 2.4, 0, Math.PI * 2);
-      context.fillStyle = `rgba(${hub.color}, 0.95)`;
-      context.fill();
+      context.arc(x, y, ringRadius, 0, Math.PI * 2);
+      context.strokeStyle = `rgba(244, 117, 255, ${0.22 + shimmer * 0.18})`;
+      context.lineWidth = 1.4;
+      context.stroke();
 
-      context.fillStyle = 'rgba(255,255,255,0.55)';
-      context.font = '11px Inter, sans-serif';
-      context.fillText(hub.key, x + 10, y - 8);
+      context.beginPath();
+      context.arc(x, y, 3.2, 0, Math.PI * 2);
+      context.fillStyle = 'rgba(255, 214, 255, 0.98)';
+      context.shadowBlur = 16;
+      context.shadowColor = 'rgba(210, 92, 255, 0.88)';
+      context.fill();
+      context.shadowBlur = 0;
+
+      if (showLabels) {
+        context.textAlign = hub.align || 'left';
+        context.textBaseline = 'middle';
+        context.fillStyle = 'rgba(255, 230, 255, 0.74)';
+        context.font = `600 ${labelSize}px Inter, sans-serif`;
+        context.fillText(hub.key, x + hub.labelDx, y + hub.labelDy);
+        context.textAlign = 'left';
+        context.textBaseline = 'alphabetic';
+      }
     });
 
     rafId = requestAnimationFrame(draw);
