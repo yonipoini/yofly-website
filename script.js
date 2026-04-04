@@ -1130,6 +1130,46 @@ function initScrollPlane() {
   window.addEventListener('resize', updatePlane);
 }
 
+function initMobileNav() {
+  const navBurger = document.getElementById('navBurger');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileNavClose = document.getElementById('mobileNavClose');
+
+  if (!navBurger || !mobileNav) {
+    return;
+  }
+
+  const setMenuState = (isOpen) => {
+    mobileNav.classList.toggle('open', isOpen);
+    navBurger.setAttribute('aria-expanded', String(isOpen));
+    document.body.classList.toggle('mobile-nav-open', isOpen);
+  };
+
+  navBurger.addEventListener('click', () => {
+    setMenuState(!mobileNav.classList.contains('open'));
+  });
+
+  mobileNavClose?.addEventListener('click', () => {
+    setMenuState(false);
+  });
+
+  mobileNav.querySelectorAll('.mobile-nav-link').forEach((link) => {
+    link.addEventListener('click', () => setMenuState(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      setMenuState(false);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      setMenuState(false);
+    }
+  });
+}
+
 function initNavContrailCanvas() {
   const navCanvas = document.getElementById('navCanvas');
   const nav = document.getElementById('nav');
@@ -1635,6 +1675,7 @@ if (nav) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+  initMobileNav();
   initScrollPlane();
   initNavContrailCanvas();
   initHeroFlightMap();
