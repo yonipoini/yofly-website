@@ -111,6 +111,31 @@ const setDisplay = (id, display) => {
   if (element) element.style.display = display;
 };
 
+function renderNavAuth(session) {
+  document.querySelectorAll('.nav .nav-cta').forEach((navCta) => {
+    if (!navCta) return;
+
+    if (session?.user) {
+      navCta.innerHTML = `
+        <a href="profile.html" class="btn btn-ghost">Dashboard</a>
+        <button class="btn btn-primary" id="signOutBtn" type="button">Sign Out</button>
+      `;
+    } else if (isProfilePage) {
+      navCta.innerHTML = `
+        <a href="login.html" class="btn btn-ghost">Sign In</a>
+        <a href="login.html" class="btn btn-primary">Get the App</a>
+      `;
+    } else {
+      navCta.innerHTML = `
+        <a href="login.html" class="btn btn-ghost">Sign In</a>
+        <a href="login.html" class="btn btn-primary">Get the App</a>
+      `;
+    }
+  });
+
+  bindSignOutButtons();
+}
+
 async function handleSignOut(button) {
   if (button) {
     button.disabled = true;
@@ -512,25 +537,34 @@ async function syncCurrentSession() {
   } = await supabaseClient.auth.getSession();
 
   if (!session?.user) {
+    renderNavAuth(null);
     if (isProfilePage) {
       window.location.href = 'login.html';
     }
     return;
   }
 
+  renderNavAuth(session);
   const profile = await ensureSharedProfile(session.user);
   updateGatedUi(profile);
+
+  if (isLoginPage) {
+    window.location.replace('profile.html');
+    return;
+  }
+
   await initProfilePage(session.user);
 }
 
 if (supabaseClient) {
   supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session?.user) {
+      renderNavAuth(session);
       const profile = await ensureSharedProfile(session.user);
       updateGatedUi(profile);
 
       if (isLoginPage || isHomePage) {
-        window.location.href = 'profile.html';
+        window.location.replace('profile.html');
         return;
       }
 
@@ -540,6 +574,7 @@ if (supabaseClient) {
     }
 
     if (event === 'SIGNED_OUT' && isProfilePage) {
+      renderNavAuth(null);
       window.location.replace(LOGIN_URL);
     }
   });
