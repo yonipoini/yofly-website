@@ -9,7 +9,13 @@ const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0amJwbWRpdnRiYWFna3lzem1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNTE3MjUsImV4cCI6MjA5MDgyNzcyNX0.Pi6ZyX8nXqMh5rpOX6Dyrsz3y0Vq-Y5eDzoqihVIemc';
 const supabaseClient =
   window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+        },
+      })
     : null;
 const PRODUCTION_ORIGIN = 'https://www.yoflycrew.com';
 const AUTH_REDIRECT_ORIGIN =
@@ -31,10 +37,15 @@ const profileDefaults = {
   role: 'PILOT',
   base_airport: 'JFK',
   aircraft: '',
+  avatar_url: '',
+  emergency_contact_name: '',
+  emergency_contact_phone: '',
   verified_crew: false,
   verified_marketplace: false,
   is_verified: false,
   verification_status: 'UNVERIFIED',
+  created_at: null,
+  updated_at: null,
   preferences: {
     intelPush: true,
     opsPush: true,
@@ -61,6 +72,27 @@ const formatDate = (value) => {
     hour: 'numeric',
     minute: '2-digit',
   }).format(date);
+};
+
+const formatMonthYear = (value) => {
+  if (!value) return 'Just joined';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Just joined';
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+};
+
+const getInitials = (value) => {
+  const words = String(value || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2);
+
+  if (!words.length) return 'YC';
+  return words.map((word) => word.charAt(0).toUpperCase()).join('');
 };
 
 const getListingCategoryLabel = (category) => {
@@ -94,6 +126,41 @@ const getVerificationTone = (status, profile) => {
   if (status === 'PENDING_EMAIL') return 'accent';
   if (status === 'PENDING_MANUAL') return 'warning';
   return 'muted';
+};
+
+const getVerificationDetail = (status, profile) => {
+  if (status === 'VERIFIED_CREW' || profile.verified_crew || profile.is_verified) {
+    return {
+      title: 'Your crew access is verified',
+      copy: 'Your profile is trusted across the website and app, and your community presence is fully active.',
+    };
+  }
+
+  if (status === 'PENDING_EMAIL') {
+    return {
+      title: 'Work email confirmation is pending',
+      copy: 'Finish the crew verification flow to unlock stronger trust markers and marketplace access.',
+    };
+  }
+
+  if (status === 'PENDING_MANUAL') {
+    return {
+      title: 'Manual review is in progress',
+      copy: 'Your crew account exists and syncs now, but the verification team still needs to review your details.',
+    };
+  }
+
+  if (status === 'REJECTED') {
+    return {
+      title: 'Your verification needs attention',
+      copy: 'Update your profile details or visit verification again to finish onboarding cleanly.',
+    };
+  }
+
+  return {
+    title: 'Your account is active but not yet verified',
+    copy: 'You are signed in and synced. Verification is the next step if you want full crew trust and marketplace access.',
+  };
 };
 
 const setText = (id, value) => {
@@ -265,27 +332,58 @@ function renderDashboardProfile(profile, user) {
 
   const verificationLabel = getVerificationLabel(mergedProfile.verification_status, mergedProfile);
   const verificationTone = getVerificationTone(mergedProfile.verification_status, mergedProfile);
+  const verificationDetail = getVerificationDetail(mergedProfile.verification_status, mergedProfile);
   const heroName = mergedProfile.full_name || 'Crew Member';
   const roleLabel = mergedProfile.role === 'FA' ? 'Flight Attendant' : mergedProfile.role || 'Crew';
   const airlineLabel = mergedProfile.airline || 'YoFly Crew';
+  const profileMeta = [airlineLabel, roleLabel, `${mergedProfile.base_airport || 'JFK'} base`].join(' • ');
+  const avatarImage = document.getElementById('profileAvatarImage');
+  const avatarFallback = document.getElementById('profileAvatarFallback');
+  const accountStatus = mergedProfile.verified_marketplace
+    ? 'Crew verified with marketplace access'
+    : verificationLabel;
+
+  if (avatarImage && avatarFallback) {
+    const avatarUrl = String(mergedProfile.avatar_url || '').trim();
+    if (avatarUrl) {
+      avatarImage.src = avatarUrl;
+      avatarImage.style.display = 'block';
+      avatarFallback.style.display = 'none';
+    } else {
+      avatarImage.removeAttribute('src');
+      avatarImage.style.display = 'none';
+      avatarFallback.style.display = 'inline';
+      avatarFallback.textContent = getInitials(mergedProfile.full_name || user.email || 'YoFly Crew');
+    }
+  }
 
   setText('profileHeroName', heroName);
   setText(
     'profileHeroSubtitle',
-    `${airlineLabel} • ${roleLabel} • ${mergedProfile.base_airport || 'JFK'} base`
+    `${profileMeta}. Your account stays signed in on this browser until you choose Sign Out.`
   );
+  setText('profileDisplayName', heroName);
   setText('profileEmail', user.email || 'No email found');
-  setText('profileMeta', `${airlineLabel} • ${roleLabel} • ${mergedProfile.base_airport || 'JFK'} base`);
+  setText('profileMeta', profileMeta);
+  setText('memberSinceValue', formatMonthYear(mergedProfile.created_at));
   setText('baseAirportValue', mergedProfile.base_airport || 'JFK');
   setText('aircraftValue', mergedProfile.aircraft || 'Not set');
   setText('airlineValue', airlineLabel);
   setText('roleValue', roleLabel);
+  setText('profileStatusTitle', accountStatus);
+  setText('profileStatusCopy', verificationDetail.copy);
+  setText('verificationDetailTitle', verificationDetail.title);
+  setText('verificationDetailCopy', verificationDetail.copy);
   setText('opsChip', `${mergedProfile.preferences.opsContextMode || 'BASE'} ops context`);
   setText(
     'mapChip',
     mergedProfile.preferences.visibleOnCrewMap ? 'Visible on crew map' : 'Hidden on crew map'
   );
   setText('intelChip', mergedProfile.preferences.intelPush ? 'Intel push enabled' : 'Intel push muted');
+  setText('opsContextValue', mergedProfile.preferences.opsContextMode || 'BASE');
+  setText('mapVisibilityValue', mergedProfile.preferences.visibleOnCrewMap ? 'Visible' : 'Hidden');
+  setText('intelPushValue', mergedProfile.preferences.intelPush ? 'On' : 'Muted');
+  setText('opsPushValue', mergedProfile.preferences.opsPush ? 'On' : 'Muted');
 
   const verificationBadge = document.getElementById('verificationBadge');
   if (verificationBadge) {
@@ -304,10 +402,18 @@ function renderDashboardProfile(profile, user) {
   const airlineInput = document.getElementById('airlineInput');
   const baseAirportInput = document.getElementById('baseAirportInput');
   const aircraftInput = document.getElementById('aircraftInput');
+  const avatarUrlInput = document.getElementById('avatarUrlInput');
+  const airlineEmailInput = document.getElementById('airlineEmailInput');
+  const emergencyContactNameInput = document.getElementById('emergencyContactNameInput');
+  const emergencyContactPhoneInput = document.getElementById('emergencyContactPhoneInput');
   if (fullNameInput) fullNameInput.value = mergedProfile.full_name || '';
   if (airlineInput) airlineInput.value = mergedProfile.airline || '';
   if (baseAirportInput) baseAirportInput.value = mergedProfile.base_airport || 'JFK';
   if (aircraftInput) aircraftInput.value = mergedProfile.aircraft || '';
+  if (avatarUrlInput) avatarUrlInput.value = mergedProfile.avatar_url || '';
+  if (airlineEmailInput) airlineEmailInput.value = mergedProfile.airline_email || user.email || '';
+  if (emergencyContactNameInput) emergencyContactNameInput.value = mergedProfile.emergency_contact_name || '';
+  if (emergencyContactPhoneInput) emergencyContactPhoneInput.value = mergedProfile.emergency_contact_phone || '';
 
   const selectedRole = mergedProfile.role === 'FA' ? 'FA' : 'PILOT';
   document.querySelectorAll('input[name="role"]').forEach((input) => {
@@ -376,7 +482,8 @@ async function initProfilePage(user) {
 
   bindSignOutButtons();
 
-  if (profileForm) {
+  if (profileForm && profileForm.dataset.bound !== 'true') {
+    profileForm.dataset.bound = 'true';
     profileForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
@@ -388,6 +495,9 @@ async function initProfilePage(user) {
         role: String(formData.get('role') || 'PILOT').trim().toUpperCase(),
         base_airport: String(formData.get('base_airport') || 'JFK').trim().toUpperCase(),
         aircraft: String(formData.get('aircraft') || '').trim(),
+        avatar_url: String(formData.get('avatar_url') || '').trim(),
+        emergency_contact_name: String(formData.get('emergency_contact_name') || '').trim(),
+        emergency_contact_phone: String(formData.get('emergency_contact_phone') || '').trim(),
         airline_email: user.email || null,
       };
 
@@ -563,7 +673,7 @@ if (supabaseClient) {
       const profile = await ensureSharedProfile(session.user);
       updateGatedUi(profile);
 
-      if (isLoginPage || isHomePage) {
+      if (isLoginPage) {
         window.location.replace('profile.html');
         return;
       }

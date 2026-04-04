@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard — YoFly Crew</title>
-  <meta name="description" content="Your YoFly Crew dashboard for profile settings, community activity, and marketplace presence." />
+  <title>Profile Hub — YoFly Crew</title>
+  <meta name="description" content="Your YoFly Crew profile hub for account details, verification status, and shared activity across web and app." />
   <link rel="icon" href="logo_cropped.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,9 +42,9 @@
     <canvas class="particles-canvas" id="particlesCanvas"></canvas>
 
     <div class="reveal-up">
-      <div class="section-badge">Member Dashboard</div>
-      <h1 class="hero-title"><span id="profileHeroName">Crew Member</span> <span class="gradient-text">Dashboard</span></h1>
-      <p class="hero-subtitle" id="profileHeroSubtitle">Shared profile, real-time community activity, and marketplace visibility all in one place.</p>
+      <div class="section-badge">Profile Hub</div>
+      <h1 class="hero-title"><span id="profileHeroName">Crew Member</span> <span class="gradient-text">Profile</span></h1>
+      <p class="hero-subtitle" id="profileHeroSubtitle">Your shared crew identity across the website and app, with verification, profile details, and recent activity in one place.</p>
     </div>
   </section>
 
@@ -52,9 +52,12 @@
     <section class="dashboard-grid reveal-up">
       <div class="dashboard-panel dashboard-account-card">
         <div class="dashboard-account-header">
-          <div class="dashboard-avatar">✈️</div>
+          <div class="dashboard-avatar" id="profileAvatar">
+            <img id="profileAvatarImage" class="dashboard-avatar-image" alt="Profile avatar" />
+            <span id="profileAvatarFallback">YC</span>
+          </div>
           <div>
-            <h2 id="profileEmail">Loading...</h2>
+            <h2 id="profileDisplayName">Loading...</h2>
             <p class="dashboard-account-meta" id="profileMeta">Checking your shared crew profile...</p>
           </div>
         </div>
@@ -64,7 +67,25 @@
           <div class="section-badge dashboard-badge-muted" id="marketplaceBadge">Marketplace Pending</div>
         </div>
 
+        <div class="dashboard-status-panel">
+          <div class="dashboard-status-copy">
+            <div class="dashboard-status-title" id="profileStatusTitle">Syncing your crew account...</div>
+            <p id="profileStatusCopy">Your website and mobile app profile are tied together here.</p>
+          </div>
+          <div class="dashboard-status-note" id="sessionPersistenceNote">
+            Signed in on this browser. You will stay logged in until you choose Sign Out.
+          </div>
+        </div>
+
         <div class="dashboard-info-grid">
+          <div class="dashboard-mini-card">
+            <div class="dashboard-mini-label">Email</div>
+            <div class="dashboard-mini-value dashboard-mini-value-sm" id="profileEmail">Loading...</div>
+          </div>
+          <div class="dashboard-mini-card">
+            <div class="dashboard-mini-label">Member Since</div>
+            <div class="dashboard-mini-value" id="memberSinceValue">Just joined</div>
+          </div>
           <div class="dashboard-mini-card">
             <div class="dashboard-mini-label">Base Airport</div>
             <div class="dashboard-mini-value" id="baseAirportValue">JFK</div>
@@ -90,22 +111,60 @@
         </div>
       </div>
 
-      <div class="dashboard-stats-grid">
-        <div class="dashboard-stat-card">
-          <span class="dashboard-stat-label">Posts</span>
-          <span class="dashboard-stat-value" id="totalPostsValue">0</span>
+      <div class="dashboard-stack">
+        <div class="dashboard-panel">
+          <div class="dashboard-section-header">
+            <div>
+              <div class="section-badge">Account Overview</div>
+              <h3>Your Crew Footprint</h3>
+            </div>
+            <a href="index.html" class="gradient-text dashboard-link">Back to Website</a>
+          </div>
+          <div class="dashboard-stats-grid">
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Posts</span>
+              <span class="dashboard-stat-value" id="totalPostsValue">0</span>
+            </div>
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Vents</span>
+              <span class="dashboard-stat-value" id="ventPostsValue">0</span>
+            </div>
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Saved</span>
+              <span class="dashboard-stat-value" id="savedPostsValue">0</span>
+            </div>
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Listings</span>
+              <span class="dashboard-stat-value" id="totalListingsValue">0</span>
+            </div>
+          </div>
         </div>
-        <div class="dashboard-stat-card">
-          <span class="dashboard-stat-label">Vents</span>
-          <span class="dashboard-stat-value" id="ventPostsValue">0</span>
-        </div>
-        <div class="dashboard-stat-card">
-          <span class="dashboard-stat-label">Saved</span>
-          <span class="dashboard-stat-value" id="savedPostsValue">0</span>
-        </div>
-        <div class="dashboard-stat-card">
-          <span class="dashboard-stat-label">Listings</span>
-          <span class="dashboard-stat-value" id="totalListingsValue">0</span>
+
+        <div class="dashboard-panel">
+          <div class="dashboard-section-header">
+            <div>
+              <div class="section-badge">Quick Links</div>
+              <h3>Where To Next</h3>
+            </div>
+          </div>
+          <div class="dashboard-quick-grid">
+            <a class="dashboard-quick-link" href="index.html">
+              <span class="dashboard-quick-kicker">Website</span>
+              <strong>Home</strong>
+            </a>
+            <a class="dashboard-quick-link" href="community.html">
+              <span class="dashboard-quick-kicker">Crew</span>
+              <strong>Community</strong>
+            </a>
+            <a class="dashboard-quick-link" href="marketplace.html">
+              <span class="dashboard-quick-kicker">Stay</span>
+              <strong>Marketplace</strong>
+            </a>
+            <a class="dashboard-quick-link" href="alerts.html">
+              <span class="dashboard-quick-kicker">Ops</span>
+              <strong>Alerts</strong>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -114,10 +173,10 @@
       <div class="dashboard-panel">
         <div class="dashboard-section-header">
           <div>
-            <div class="section-badge">Profile</div>
-            <h3>Update Member Details</h3>
+            <div class="section-badge">Profile Details</div>
+            <h3>Edit Your Shared Account</h3>
           </div>
-          <p class="dashboard-section-copy">These fields sync with the shared app profile too.</p>
+          <p class="dashboard-section-copy">Everything here follows you across the website and the mobile app.</p>
         </div>
 
         <form id="profileForm" class="dashboard-form">
@@ -137,6 +196,22 @@
             <div>
               <label class="dashboard-label" for="aircraftInput">Aircraft / Fleet</label>
               <input id="aircraftInput" name="aircraft" type="text" class="dashboard-input" placeholder="A320, B737, Widebody..." />
+            </div>
+            <div>
+              <label class="dashboard-label" for="avatarUrlInput">Avatar Image URL</label>
+              <input id="avatarUrlInput" name="avatar_url" type="url" class="dashboard-input" placeholder="https://..." />
+            </div>
+            <div>
+              <label class="dashboard-label" for="airlineEmailInput">Account Email</label>
+              <input id="airlineEmailInput" name="airline_email" type="email" class="dashboard-input" readonly />
+            </div>
+            <div>
+              <label class="dashboard-label" for="emergencyContactNameInput">Emergency Contact Name</label>
+              <input id="emergencyContactNameInput" name="emergency_contact_name" type="text" class="dashboard-input" placeholder="Who should we keep on file?" />
+            </div>
+            <div>
+              <label class="dashboard-label" for="emergencyContactPhoneInput">Emergency Contact Phone</label>
+              <input id="emergencyContactPhoneInput" name="emergency_contact_phone" type="tel" class="dashboard-input" placeholder="(555) 555-5555" />
             </div>
           </div>
 
@@ -165,6 +240,47 @@
       </div>
 
       <div class="dashboard-stack">
+        <div class="dashboard-panel">
+          <div class="dashboard-section-header">
+            <div>
+              <div class="section-badge">Verification</div>
+              <h3>Crew Access Status</h3>
+            </div>
+            <a href="verify.html" class="gradient-text dashboard-link">Open Verification</a>
+          </div>
+          <div class="dashboard-verification-card">
+            <div class="dashboard-verification-title" id="verificationDetailTitle">Verification is being checked</div>
+            <p class="dashboard-verification-copy" id="verificationDetailCopy">Once approved, your crew trust features and marketplace access will reflect here.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-panel">
+          <div class="dashboard-section-header">
+            <div>
+              <div class="section-badge">Preferences</div>
+              <h3>Current Experience Settings</h3>
+            </div>
+          </div>
+          <div class="dashboard-preferences-grid">
+            <div class="dashboard-mini-card">
+              <div class="dashboard-mini-label">Ops Context</div>
+              <div class="dashboard-mini-value" id="opsContextValue">BASE</div>
+            </div>
+            <div class="dashboard-mini-card">
+              <div class="dashboard-mini-label">Map Visibility</div>
+              <div class="dashboard-mini-value" id="mapVisibilityValue">Visible</div>
+            </div>
+            <div class="dashboard-mini-card">
+              <div class="dashboard-mini-label">Intel Push</div>
+              <div class="dashboard-mini-value" id="intelPushValue">On</div>
+            </div>
+            <div class="dashboard-mini-card">
+              <div class="dashboard-mini-label">Ops Push</div>
+              <div class="dashboard-mini-value" id="opsPushValue">On</div>
+            </div>
+          </div>
+        </div>
+
         <div class="dashboard-panel">
           <div class="dashboard-section-header">
             <div>
