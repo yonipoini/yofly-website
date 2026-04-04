@@ -1272,13 +1272,13 @@ function initHeroFlightMap() {
     },
   };
   const hubs = [
-    { key: 'LAX', x: 0.04, y: 0.18, labelDx: 14, labelDy: -10, align: 'left', tone: 'cyan' },
-    { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
-    { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
+    { key: 'LAX', x: 0.04, y: 0.18, labelDx: 14, labelDy: -10, align: 'left', tone: 'cyan', mobileHidden: true },
+    { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', mobileHidden: true },
+    { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', mobileHidden: true },
     { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', mobileHidden: true },
     { key: 'ATL', x: 0.46, y: 0.28, labelDx: 10, labelDy: -12, align: 'left', tone: 'cyan', showLabel: true, scale: 0.9, labelScale: 0.78, hidden: true },
-    { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
-    { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
+    { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', mobileHidden: true },
+    { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', mobileHidden: true },
     { key: 'DXB', x: 0.91, y: 0.32, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
     { key: 'HND', x: 0.94, y: 0.56, labelDx: -14, labelDy: -12, align: 'right', tone: 'cyan' },
     { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
