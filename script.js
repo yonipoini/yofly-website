@@ -18,10 +18,11 @@ const AUTH_REDIRECT_ORIGIN =
     : window.location.origin;
 const AUTH_REDIRECT_URL = `${AUTH_REDIRECT_ORIGIN}/profile`;
 
-const pageName = window.location.pathname.split('/').pop() || 'index.html';
-const isLoginPage = pageName === 'login.html';
-const isHomePage = pageName === '' || pageName === 'index.html';
-const isProfilePage = pageName === 'profile.html';
+const pageName = window.location.pathname.split('/').pop() || 'index';
+const normalizedPageName = pageName.replace(/\.html$/i, '').toLowerCase();
+const isLoginPage = normalizedPageName === 'login';
+const isHomePage = normalizedPageName === '' || normalizedPageName === 'index';
+const isProfilePage = normalizedPageName === 'profile';
 
 const profileDefaults = {
   full_name: '',
