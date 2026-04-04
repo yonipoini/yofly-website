@@ -1287,6 +1287,9 @@ function initHeroFlightMap() {
     { key: 'DEN', x: 0.34, y: 0.58, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.74 },
     { key: 'MIA', x: 0.18, y: 0.70, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.68 },
     { key: 'BOS', x: 0.44, y: 0.71, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.7 },
+    { key: 'MCO', x: 0.30, y: 0.80, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.68 },
+    { key: 'PHX', x: 0.08, y: 0.56, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.7 },
+    { key: 'CLT', x: 0.50, y: 0.56, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.66 },
   ];
   const routes = [
     { from: 0, to: 1, tone: 'cyan', markers: 3, spacing: 0.3, speed: 1 },
