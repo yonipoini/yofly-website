@@ -56,6 +56,10 @@ const profileDefaults = {
   },
 };
 
+let currentDashboardProfile = null;
+let currentDashboardSnapshot = null;
+let currentDashboardUser = null;
+
 const escapeHtml = (value) =>
   String(value || '')
     .replace(/&/g, '&amp;')
@@ -164,6 +168,106 @@ const getVerificationDetail = (status, profile) => {
   };
 };
 
+const mergeDashboardProfile = (profile = {}) => ({
+  ...profileDefaults,
+  ...profile,
+  preferences: {
+    ...profileDefaults.preferences,
+    ...(profile.preferences || {}),
+  },
+});
+
+const getRoleLabel = (role) => {
+  if (role === 'FA') return 'Flight Attendant';
+  if (role === 'PILOT') return 'Pilot';
+  return role || 'Crew';
+};
+
+const getProfileCompletion = (profile, user) => {
+  const checks = [
+    profile.full_name,
+    user?.email,
+    profile.airline,
+    profile.base_airport,
+    profile.aircraft,
+    profile.avatar_url,
+    profile.emergency_contact_name,
+    profile.emergency_contact_phone,
+  ];
+
+  const completed = checks.filter((value) => String(value || '').trim()).length;
+  return Math.round((completed / checks.length) * 100);
+};
+
+const getAccessTier = (profile) => {
+  if (profile.verified_crew || profile.is_verified) return 'Trusted Crew';
+  if (profile.verification_status === 'PENDING_EMAIL') return 'Email Pending';
+  if (profile.verification_status === 'PENDING_MANUAL') return 'Manual Review';
+  if (profile.verification_status === 'REJECTED') return 'Needs Attention';
+  return 'Basic Access';
+};
+
+const getEmergencyReadiness = (profile) => {
+  if (profile.emergency_contact_name && profile.emergency_contact_phone) return 'Ready';
+  if (profile.emergency_contact_phone) return 'Add contact name';
+  return 'Not set';
+};
+
+const getCommunityPresence = (snapshot) => {
+  if (!snapshot) return 'Loading';
+  if (snapshot.totalPosts > 0) return `${snapshot.totalPosts} posts shared`;
+  return 'No posts yet';
+};
+
+const getNextStep = (profile, user, snapshot) => {
+  if (!String(profile.full_name || '').trim() || !String(profile.airline || '').trim()) {
+    return {
+      title: 'Finish your core profile',
+      copy: 'Add your name, airline, and fleet so your dashboard, community presence, and future trust signals feel complete.',
+    };
+  }
+
+  if (!String(profile.emergency_contact_name || '').trim() || !String(profile.emergency_contact_phone || '').trim()) {
+    return {
+      title: 'Add your emergency contact',
+      copy: 'This makes your dashboard more operationally useful and gives your account a complete safety profile.',
+    };
+  }
+
+  if (profile.verification_status === 'PENDING_EMAIL') {
+    return {
+      title: 'Finish your work-email verification',
+      copy: `Open the email sent to ${user?.email || 'your inbox'} so your crew trust status and marketplace access can fully unlock.`,
+    };
+  }
+
+  if (profile.verification_status === 'PENDING_MANUAL') {
+    return {
+      title: 'Wait for manual review to complete',
+      copy: 'Your account is active already. Keep your profile current while the trust review team finishes the verification pass.',
+    };
+  }
+
+  if (!snapshot || snapshot.totalPosts === 0) {
+    return {
+      title: 'Introduce yourself in the community',
+      copy: 'Your dashboard is ready. The next high-value move is posting your first update so the community side of your account becomes active too.',
+    };
+  }
+
+  if ((profile.verified_marketplace || profile.verified_crew) && snapshot.totalListings === 0) {
+    return {
+      title: 'Create your first marketplace listing',
+      copy: 'You already have access. Adding a listing makes the dashboard feel more complete and gives the marketplace section real traction.',
+    };
+  }
+
+  return {
+    title: 'Your dashboard is in a healthy state',
+    copy: 'Use this space to keep your account details current, track your posts and listings, and tune the ops experience for how you actually fly.',
+  };
+};
+
 const setText = (id, value) => {
   const element = document.getElementById(id);
   if (element) element.textContent = value;
@@ -202,6 +306,10 @@ function renderNavAuth(session) {
 function renderSignedOutProfileState() {
   if (!isProfilePage) return;
 
+  currentDashboardProfile = null;
+  currentDashboardSnapshot = null;
+  currentDashboardUser = null;
+
   setText('profileHeroName', 'Session Ended');
   setText(
     'profileHeroSubtitle',
@@ -209,14 +317,37 @@ function renderSignedOutProfileState() {
   );
   setText('profileDisplayName', 'Redirecting to Sign In');
   setText('profileMeta', 'Your crew dashboard is only available while signed in.');
+  setText('sidebarUserName', 'Signed out');
+  setText('sidebarUserMeta', 'Sign in again to reopen your member console.');
+  setText('sidebarVerificationPill', 'Signed out');
   setText('profileEmail', 'Signed out');
   setText('profileStatusTitle', 'Signed out');
   setText('profileStatusCopy', 'You need an active session to view your dashboard.');
   setText('verificationDetailTitle', 'Sign in to view your dashboard');
   setText('verificationDetailCopy', 'Once you sign back in, your crew profile and activity will load here.');
+  setText('accountCompletionValue', '0%');
+  setText('accountCompletionCopy', 'You need an active session before dashboard data can load.');
+  setText('accessTierValue', 'Signed out');
+  setText('emergencyReadinessValue', 'Unavailable');
+  setText('activeOpsAirportValue', 'N/A');
+  setText('communityPresenceValue', 'Unavailable');
+  setText('nextStepTitle', 'Return to sign in');
+  setText('nextStepCopy', 'You have been signed out of the dashboard and will be redirected to the login page.');
   setText('opsChip', 'Signed out');
   setText('mapChip', 'Signed out');
   setText('intelChip', 'Signed out');
+  setText('opsContextValue', 'N/A');
+  setText('mapVisibilityValue', 'N/A');
+  setText('intelPushValue', 'N/A');
+  setText('opsPushValue', 'N/A');
+  const accountCompletionFill = document.getElementById('accountCompletionFill');
+  if (accountCompletionFill) {
+    accountCompletionFill.style.width = '0%';
+  }
+  const sidebarVerificationPill = document.getElementById('sidebarVerificationPill');
+  if (sidebarVerificationPill) {
+    sidebarVerificationPill.dataset.tone = 'muted';
+  }
   setHtml(
     'recentPostsList',
     '<div class="dashboard-empty">Redirecting to sign in...</div>'
@@ -348,21 +479,42 @@ async function loadDashboardSnapshot(userId) {
   };
 }
 
+function renderDashboardInsights(profile, user, snapshot = currentDashboardSnapshot) {
+  if (!profile) return;
+
+  const completion = getProfileCompletion(profile, user);
+  const nextStep = getNextStep(profile, user, snapshot);
+
+  setText('accountCompletionValue', `${completion}%`);
+  setText(
+    'accountCompletionCopy',
+    completion >= 88
+      ? 'Your account is in strong shape across profile, safety, and ops details.'
+      : 'Keep filling in the profile and ops details so this workspace becomes more useful.'
+  );
+  setText('accessTierValue', getAccessTier(profile));
+  setText('emergencyReadinessValue', getEmergencyReadiness(profile));
+  setText('activeOpsAirportValue', profile.preferences.activeOpsAirport || profile.base_airport || 'JFK');
+  setText('communityPresenceValue', getCommunityPresence(snapshot));
+  setText('nextStepTitle', nextStep.title);
+  setText('nextStepCopy', nextStep.copy);
+
+  const accountCompletionFill = document.getElementById('accountCompletionFill');
+  if (accountCompletionFill) {
+    accountCompletionFill.style.width = `${completion}%`;
+  }
+}
+
 function renderDashboardProfile(profile, user) {
-  const mergedProfile = {
-    ...profileDefaults,
-    ...profile,
-    preferences: {
-      ...profileDefaults.preferences,
-      ...(profile.preferences || {}),
-    },
-  };
+  const mergedProfile = mergeDashboardProfile(profile);
+  currentDashboardProfile = mergedProfile;
+  currentDashboardUser = user;
 
   const verificationLabel = getVerificationLabel(mergedProfile.verification_status, mergedProfile);
   const verificationTone = getVerificationTone(mergedProfile.verification_status, mergedProfile);
   const verificationDetail = getVerificationDetail(mergedProfile.verification_status, mergedProfile);
   const heroName = mergedProfile.full_name || 'Crew Member';
-  const roleLabel = mergedProfile.role === 'FA' ? 'Flight Attendant' : mergedProfile.role || 'Crew';
+  const roleLabel = getRoleLabel(mergedProfile.role);
   const airlineLabel = mergedProfile.airline || 'YoFly Crew';
   const profileMeta = [airlineLabel, roleLabel, `${mergedProfile.base_airport || 'JFK'} base`].join(' • ');
   const avatarImage = document.getElementById('profileAvatarImage');
@@ -388,7 +540,7 @@ function renderDashboardProfile(profile, user) {
   setText('profileHeroName', heroName);
   setText(
     'profileHeroSubtitle',
-    `${profileMeta}. Your account stays signed in on this browser until you choose Sign Out.`
+    `${profileMeta}. This dashboard is focused on your identity, trust, activity, and the controls that matter while signed in.`
   );
   setText('profileDisplayName', heroName);
   setText('profileEmail', user.email || 'No email found');
@@ -402,6 +554,12 @@ function renderDashboardProfile(profile, user) {
   setText('profileStatusCopy', verificationDetail.copy);
   setText('verificationDetailTitle', verificationDetail.title);
   setText('verificationDetailCopy', verificationDetail.copy);
+  setText('sidebarUserName', heroName);
+  setText('sidebarUserMeta', `${roleLabel} • ${mergedProfile.base_airport || 'JFK'} base`);
+  setText(
+    'sessionPersistenceNote',
+    `Signed in as ${user.email || 'your account'}. This dashboard stays active on this browser until you choose Sign Out.`
+  );
   setText('opsChip', `${mergedProfile.preferences.opsContextMode || 'BASE'} ops context`);
   setText(
     'mapChip',
@@ -419,6 +577,12 @@ function renderDashboardProfile(profile, user) {
     verificationBadge.dataset.tone = verificationTone;
   }
 
+  const sidebarVerificationPill = document.getElementById('sidebarVerificationPill');
+  if (sidebarVerificationPill) {
+    sidebarVerificationPill.textContent = verificationLabel;
+    sidebarVerificationPill.dataset.tone = verificationTone;
+  }
+
   const marketplaceBadge = document.getElementById('marketplaceBadge');
   if (marketplaceBadge) {
     marketplaceBadge.textContent = mergedProfile.verified_marketplace
@@ -434,6 +598,12 @@ function renderDashboardProfile(profile, user) {
   const airlineEmailInput = document.getElementById('airlineEmailInput');
   const emergencyContactNameInput = document.getElementById('emergencyContactNameInput');
   const emergencyContactPhoneInput = document.getElementById('emergencyContactPhoneInput');
+  const opsContextInput = document.getElementById('opsContextInput');
+  const activeOpsAirportInput = document.getElementById('activeOpsAirportInput');
+  const visibleOnCrewMapInput = document.getElementById('visibleOnCrewMapInput');
+  const intelPushInput = document.getElementById('intelPushInput');
+  const opsPushInput = document.getElementById('opsPushInput');
+
   if (fullNameInput) fullNameInput.value = mergedProfile.full_name || '';
   if (airlineInput) airlineInput.value = mergedProfile.airline || '';
   if (baseAirportInput) baseAirportInput.value = mergedProfile.base_airport || 'JFK';
@@ -442,14 +612,26 @@ function renderDashboardProfile(profile, user) {
   if (airlineEmailInput) airlineEmailInput.value = mergedProfile.airline_email || user.email || '';
   if (emergencyContactNameInput) emergencyContactNameInput.value = mergedProfile.emergency_contact_name || '';
   if (emergencyContactPhoneInput) emergencyContactPhoneInput.value = mergedProfile.emergency_contact_phone || '';
+  if (opsContextInput) opsContextInput.value = mergedProfile.preferences.opsContextMode || 'BASE';
+  if (activeOpsAirportInput) {
+    activeOpsAirportInput.value =
+      mergedProfile.preferences.activeOpsAirport || mergedProfile.base_airport || 'JFK';
+  }
+  if (visibleOnCrewMapInput) visibleOnCrewMapInput.checked = Boolean(mergedProfile.preferences.visibleOnCrewMap);
+  if (intelPushInput) intelPushInput.checked = Boolean(mergedProfile.preferences.intelPush);
+  if (opsPushInput) opsPushInput.checked = Boolean(mergedProfile.preferences.opsPush);
 
   const selectedRole = mergedProfile.role === 'FA' ? 'FA' : 'PILOT';
   document.querySelectorAll('input[name="role"]').forEach((input) => {
     input.checked = input.value === selectedRole;
   });
+
+  renderDashboardInsights(mergedProfile, user);
 }
 
 function renderDashboardSnapshot(snapshot) {
+  currentDashboardSnapshot = snapshot;
+
   setText('totalPostsValue', String(snapshot.totalPosts));
   setText('ventPostsValue', String(snapshot.ventPosts));
   setText('savedPostsValue', String(snapshot.savedPosts));
@@ -483,6 +665,10 @@ function renderDashboardSnapshot(snapshot) {
 
   setHtml('recentPostsList', postsMarkup);
   setHtml('recentListingsList', listingsMarkup);
+
+  if (currentDashboardProfile) {
+    renderDashboardInsights(currentDashboardProfile, currentDashboardUser, snapshot);
+  }
 }
 
 async function initProfilePage(user) {
@@ -516,6 +702,12 @@ async function initProfilePage(user) {
       event.preventDefault();
 
       const formData = new FormData(profileForm);
+      const existingProfile = mergeDashboardProfile(currentDashboardProfile || {});
+      const opsContextInput = document.getElementById('opsContextInput');
+      const activeOpsAirportInput = document.getElementById('activeOpsAirportInput');
+      const visibleOnCrewMapInput = document.getElementById('visibleOnCrewMapInput');
+      const intelPushInput = document.getElementById('intelPushInput');
+      const opsPushInput = document.getElementById('opsPushInput');
       const payload = {
         id: user.id,
         full_name: String(formData.get('full_name') || '').trim(),
@@ -527,6 +719,16 @@ async function initProfilePage(user) {
         emergency_contact_name: String(formData.get('emergency_contact_name') || '').trim(),
         emergency_contact_phone: String(formData.get('emergency_contact_phone') || '').trim(),
         airline_email: user.email || null,
+        preferences: {
+          ...existingProfile.preferences,
+          opsContextMode: String(opsContextInput?.value || 'BASE').trim().toUpperCase(),
+          activeOpsAirport: String(activeOpsAirportInput?.value || formData.get('base_airport') || 'JFK')
+            .trim()
+            .toUpperCase(),
+          visibleOnCrewMap: Boolean(visibleOnCrewMapInput?.checked),
+          intelPush: Boolean(intelPushInput?.checked),
+          opsPush: Boolean(opsPushInput?.checked),
+        },
       };
 
       if (profileSaveMessage) {

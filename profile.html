@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile Hub — YoFly Crew</title>
-  <meta name="description" content="Your YoFly Crew profile hub for account details, verification status, and shared activity across web and app." />
+  <title>Member Dashboard — YoFly Crew</title>
+  <meta name="description" content="Manage your YoFly Crew account, update your profile, and track your crew activity from one focused dashboard." />
   <link rel="icon" href="logo_cropped.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,309 +12,402 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
-
+<body class="dashboard-body">
   <div class="cursor" id="cursor"></div>
   <div class="cursor-follower" id="cursorFollower"></div>
+  <div class="hero-grid" style="opacity: 0.28;"></div>
+  <div class="orb orb-1" style="opacity: 0.32;"></div>
+  <div class="orb orb-2" style="opacity: 0.22;"></div>
+  <canvas class="particles-canvas" id="particlesCanvas"></canvas>
 
-  <nav class="nav scrolled" id="nav">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo">
-        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+  <div class="dashboard-shell">
+    <aside class="dashboard-rail reveal-up">
+      <a href="index.html" class="dashboard-brand">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="dashboard-brand-logo" />
+        <div>
+          <div class="dashboard-brand-kicker">YoFly Crew</div>
+          <div class="dashboard-brand-title">Member Console</div>
+        </div>
       </a>
-      <ul class="nav-links">
-        <li><a href="features.html">Features</a></li>
-        <li><a href="community.html">Community</a></li>
-        <li><a href="marketplace.html">Marketplace</a></li>
-        <li><a href="alerts.html">Alerts</a></li>
-      </ul>
-      <div class="nav-cta" id="navAuth">
-        <a href="login.html" class="btn btn-ghost">Sign In</a>
-        <a href="login.html" class="btn btn-primary">Get the App</a>
+
+      <div class="dashboard-rail-profile">
+        <div class="section-badge" id="sidebarVerificationPill" data-tone="muted">Checking access</div>
+        <h2 id="sidebarUserName">Checking session...</h2>
+        <p id="sidebarUserMeta">Loading your crew workspace and account data.</p>
       </div>
-    </div>
-  </nav>
 
-  <section class="subpage-hero">
-    <div class="hero-grid"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+      <nav class="dashboard-rail-nav" aria-label="Dashboard Sections">
+        <a href="#overview" class="dashboard-rail-link">Overview</a>
+        <a href="#profile-editor" class="dashboard-rail-link">Edit Profile</a>
+        <a href="#ops-center" class="dashboard-rail-link">Ops Preferences</a>
+        <a href="#verification" class="dashboard-rail-link">Verification</a>
+        <a href="#activity" class="dashboard-rail-link">Community Activity</a>
+        <a href="#marketplace" class="dashboard-rail-link">Marketplace</a>
+      </nav>
 
-    <div class="reveal-up">
-      <div class="section-badge">Profile Hub</div>
-      <h1 class="hero-title"><span id="profileHeroName">Crew Member</span> <span class="gradient-text">Profile</span></h1>
-      <p class="hero-subtitle" id="profileHeroSubtitle">Your shared crew identity across the website and app, with verification, profile details, and recent activity in one place.</p>
-    </div>
-  </section>
-
-  <main class="page-content dashboard-page">
-    <section class="dashboard-grid reveal-up">
-      <div class="dashboard-panel dashboard-account-card">
-        <div class="dashboard-account-header">
-          <div class="dashboard-avatar" id="profileAvatar">
-            <img id="profileAvatarImage" class="dashboard-avatar-image" alt="Profile avatar" />
-            <span id="profileAvatarFallback">YC</span>
-          </div>
-          <div>
-            <h2 id="profileDisplayName">Checking session...</h2>
-            <p class="dashboard-account-meta" id="profileMeta">Confirming your crew access before loading the dashboard...</p>
-          </div>
-        </div>
-
-        <div class="dashboard-badges">
-          <div class="section-badge" id="verificationBadge">Unverified</div>
-          <div class="section-badge dashboard-badge-muted" id="marketplaceBadge">Marketplace Pending</div>
-        </div>
-
-        <div class="dashboard-status-panel">
-          <div class="dashboard-status-copy">
-            <div class="dashboard-status-title" id="profileStatusTitle">Syncing your crew account...</div>
-            <p id="profileStatusCopy">Your website and mobile app profile are tied together here.</p>
-          </div>
-          <div class="dashboard-status-note" id="sessionPersistenceNote">
-            Signed in on this browser. You will stay logged in until you choose Sign Out.
-          </div>
-        </div>
-
-        <div class="dashboard-info-grid">
-          <div class="dashboard-mini-card">
-            <div class="dashboard-mini-label">Email</div>
-            <div class="dashboard-mini-value dashboard-mini-value-sm" id="profileEmail">Checking session...</div>
-          </div>
-          <div class="dashboard-mini-card">
-            <div class="dashboard-mini-label">Member Since</div>
-            <div class="dashboard-mini-value" id="memberSinceValue">Just joined</div>
-          </div>
-          <div class="dashboard-mini-card">
-            <div class="dashboard-mini-label">Base Airport</div>
-            <div class="dashboard-mini-value" id="baseAirportValue">JFK</div>
-          </div>
-          <div class="dashboard-mini-card">
-            <div class="dashboard-mini-label">Aircraft</div>
-            <div class="dashboard-mini-value" id="aircraftValue">Not set</div>
-          </div>
-          <div class="dashboard-mini-card">
-            <div class="dashboard-mini-label">Airline</div>
-            <div class="dashboard-mini-value" id="airlineValue">Not set</div>
-          </div>
-          <div class="dashboard-mini-card">
-            <div class="dashboard-mini-label">Role</div>
-            <div class="dashboard-mini-value" id="roleValue">Not set</div>
-          </div>
-        </div>
-
-        <div class="dashboard-preferences">
-          <div class="dashboard-chip" id="opsChip">Ops context loading</div>
-          <div class="dashboard-chip" id="mapChip">Crew map loading</div>
-          <div class="dashboard-chip" id="intelChip">Intel loading</div>
+      <div class="dashboard-rail-card">
+        <div class="dashboard-mini-label">Quick Access</div>
+        <div class="dashboard-rail-actions">
+          <a href="community.html" class="dashboard-rail-action">Open Community</a>
+          <a href="marketplace.html" class="dashboard-rail-action">Browse Marketplace</a>
+          <a href="alerts.html" class="dashboard-rail-action">View Alerts</a>
+          <a href="verify.html" class="dashboard-rail-action">Open Verification</a>
         </div>
       </div>
 
-      <div class="dashboard-stack">
-        <div class="dashboard-panel">
-          <div class="dashboard-section-header">
-            <div>
-              <div class="section-badge">Account Overview</div>
-              <h3>Your Crew Footprint</h3>
-            </div>
-            <a href="index.html" class="gradient-text dashboard-link">Back to Website</a>
-          </div>
-          <div class="dashboard-stats-grid">
-            <div class="dashboard-stat-card">
-              <span class="dashboard-stat-label">Posts</span>
-              <span class="dashboard-stat-value" id="totalPostsValue">0</span>
-            </div>
-            <div class="dashboard-stat-card">
-              <span class="dashboard-stat-label">Vents</span>
-              <span class="dashboard-stat-value" id="ventPostsValue">0</span>
-            </div>
-            <div class="dashboard-stat-card">
-              <span class="dashboard-stat-label">Saved</span>
-              <span class="dashboard-stat-value" id="savedPostsValue">0</span>
-            </div>
-            <div class="dashboard-stat-card">
-              <span class="dashboard-stat-label">Listings</span>
-              <span class="dashboard-stat-value" id="totalListingsValue">0</span>
-            </div>
-          </div>
+      <button class="btn btn-primary dashboard-signout-btn" id="signOutBtn" type="button">Sign Out</button>
+    </aside>
+
+    <main class="dashboard-workspace">
+      <header class="dashboard-topbar reveal-up">
+        <div>
+          <div class="section-badge">Crew Dashboard</div>
+          <h1 class="dashboard-workspace-title"><span id="profileHeroName">Checking session...</span> <span class="gradient-text">Dashboard</span></h1>
+          <p class="dashboard-workspace-copy" id="profileHeroSubtitle">Confirming your crew access before loading your account workspace.</p>
         </div>
-
-        <div class="dashboard-panel">
-          <div class="dashboard-section-header">
-            <div>
-              <div class="section-badge">Quick Links</div>
-              <h3>Where To Next</h3>
-            </div>
-          </div>
-          <div class="dashboard-quick-grid">
-            <a class="dashboard-quick-link" href="index.html">
-              <span class="dashboard-quick-kicker">Website</span>
-              <strong>Home</strong>
-            </a>
-            <a class="dashboard-quick-link" href="community.html">
-              <span class="dashboard-quick-kicker">Crew</span>
-              <strong>Community</strong>
-            </a>
-            <a class="dashboard-quick-link" href="marketplace.html">
-              <span class="dashboard-quick-kicker">Stay</span>
-              <strong>Marketplace</strong>
-            </a>
-            <a class="dashboard-quick-link" href="alerts.html">
-              <span class="dashboard-quick-kicker">Ops</span>
-              <strong>Alerts</strong>
-            </a>
-          </div>
+        <div class="dashboard-topbar-actions">
+          <a href="community.html" class="btn btn-ghost">Community</a>
+          <a href="marketplace.html" class="btn btn-ghost">Marketplace</a>
+          <a href="alerts.html" class="btn btn-primary">Alerts & Ops</a>
         </div>
-      </div>
-    </section>
+      </header>
 
-    <section class="dashboard-main-grid reveal-up">
-      <div class="dashboard-panel">
-        <div class="dashboard-section-header">
-          <div>
-            <div class="section-badge">Profile Details</div>
-            <h3>Edit Your Shared Account</h3>
-          </div>
-          <p class="dashboard-section-copy">Everything here follows you across the website and the mobile app.</p>
-        </div>
-
-        <form id="profileForm" class="dashboard-form">
-          <div class="dashboard-form-grid">
-            <div>
-              <label class="dashboard-label" for="fullNameInput">Full Name</label>
-              <input id="fullNameInput" name="full_name" type="text" class="dashboard-input" placeholder="Your full name" />
+      <section id="overview" class="dashboard-overview-grid reveal-up">
+        <article class="dashboard-panel dashboard-account-card">
+          <div class="dashboard-account-header">
+            <div class="dashboard-avatar" id="profileAvatar">
+              <img id="profileAvatarImage" class="dashboard-avatar-image" alt="Profile avatar" />
+              <span id="profileAvatarFallback">YC</span>
             </div>
             <div>
-              <label class="dashboard-label" for="airlineInput">Airline / Company</label>
-              <input id="airlineInput" name="airline" type="text" class="dashboard-input" placeholder="Delta, Emirates, United..." />
-            </div>
-            <div>
-              <label class="dashboard-label" for="baseAirportInput">Base Airport</label>
-              <input id="baseAirportInput" name="base_airport" type="text" class="dashboard-input" placeholder="JFK" maxlength="4" />
-            </div>
-            <div>
-              <label class="dashboard-label" for="aircraftInput">Aircraft / Fleet</label>
-              <input id="aircraftInput" name="aircraft" type="text" class="dashboard-input" placeholder="A320, B737, Widebody..." />
-            </div>
-            <div>
-              <label class="dashboard-label" for="avatarUrlInput">Avatar Image URL</label>
-              <input id="avatarUrlInput" name="avatar_url" type="url" class="dashboard-input" placeholder="https://..." />
-            </div>
-            <div>
-              <label class="dashboard-label" for="airlineEmailInput">Account Email</label>
-              <input id="airlineEmailInput" name="airline_email" type="email" class="dashboard-input" readonly />
-            </div>
-            <div>
-              <label class="dashboard-label" for="emergencyContactNameInput">Emergency Contact Name</label>
-              <input id="emergencyContactNameInput" name="emergency_contact_name" type="text" class="dashboard-input" placeholder="Who should we keep on file?" />
-            </div>
-            <div>
-              <label class="dashboard-label" for="emergencyContactPhoneInput">Emergency Contact Phone</label>
-              <input id="emergencyContactPhoneInput" name="emergency_contact_phone" type="tel" class="dashboard-input" placeholder="(555) 555-5555" />
+              <h2 id="profileDisplayName">Checking session...</h2>
+              <p class="dashboard-account-meta" id="profileMeta">Loading your personal crew information.</p>
             </div>
           </div>
 
-          <div>
-            <label class="dashboard-label">Primary Role</label>
-            <div class="dashboard-role-grid">
-              <label class="dashboard-role-card">
-                <input type="radio" name="role" value="PILOT" />
-                <span class="dashboard-role-icon">👨‍✈️</span>
-                <span class="dashboard-role-text">Pilot</span>
-              </label>
-              <label class="dashboard-role-card">
-                <input type="radio" name="role" value="FA" />
-                <span class="dashboard-role-icon">💃</span>
-                <span class="dashboard-role-text">Flight Attendant</span>
-              </label>
+          <div class="dashboard-badges">
+            <div class="section-badge" id="verificationBadge" data-tone="muted">Checking access</div>
+            <div class="section-badge dashboard-badge-muted" id="marketplaceBadge">Marketplace Pending</div>
+          </div>
+
+          <div class="dashboard-status-panel">
+            <div class="dashboard-status-copy">
+              <div class="dashboard-status-title" id="profileStatusTitle">Syncing your crew account...</div>
+              <p id="profileStatusCopy">Your website and mobile app profile will load here once your session is ready.</p>
+            </div>
+            <div class="dashboard-status-note" id="sessionPersistenceNote">
+              Signed in on this browser. You will stay logged in until you choose Sign Out.
             </div>
           </div>
 
-          <div class="dashboard-form-actions">
-            <button type="submit" class="btn btn-primary">Save Profile</button>
-            <a href="verify.html" class="btn btn-ghost">Verification Center</a>
-          </div>
-          <div id="profileSaveMessage" class="dashboard-inline-message"></div>
-        </form>
-      </div>
-
-      <div class="dashboard-stack">
-        <div class="dashboard-panel">
-          <div class="dashboard-section-header">
-            <div>
-              <div class="section-badge">Verification</div>
-              <h3>Crew Access Status</h3>
+          <div class="dashboard-progress-card">
+            <div class="dashboard-progress-copy">
+              <div class="dashboard-mini-label">Profile Completion</div>
+              <div class="dashboard-progress-value"><span id="accountCompletionValue">0%</span> ready</div>
             </div>
-            <a href="verify.html" class="gradient-text dashboard-link">Open Verification</a>
-          </div>
-          <div class="dashboard-verification-card">
-            <div class="dashboard-verification-title" id="verificationDetailTitle">Verification is being checked</div>
-            <p class="dashboard-verification-copy" id="verificationDetailCopy">Once approved, your crew trust features and marketplace access will reflect here.</p>
-          </div>
-        </div>
-
-        <div class="dashboard-panel">
-          <div class="dashboard-section-header">
-            <div>
-              <div class="section-badge">Preferences</div>
-              <h3>Current Experience Settings</h3>
+            <div class="dashboard-progress-track">
+              <div class="dashboard-progress-fill" id="accountCompletionFill"></div>
             </div>
+            <p class="dashboard-inline-copy" id="accountCompletionCopy">Complete your profile details to make your account more useful across web and mobile.</p>
           </div>
-          <div class="dashboard-preferences-grid">
+
+          <div class="dashboard-info-grid">
             <div class="dashboard-mini-card">
-              <div class="dashboard-mini-label">Ops Context</div>
-              <div class="dashboard-mini-value" id="opsContextValue">BASE</div>
+              <div class="dashboard-mini-label">Email</div>
+              <div class="dashboard-mini-value dashboard-mini-value-sm" id="profileEmail">Checking session...</div>
             </div>
             <div class="dashboard-mini-card">
-              <div class="dashboard-mini-label">Map Visibility</div>
-              <div class="dashboard-mini-value" id="mapVisibilityValue">Visible</div>
+              <div class="dashboard-mini-label">Member Since</div>
+              <div class="dashboard-mini-value" id="memberSinceValue">Just joined</div>
             </div>
             <div class="dashboard-mini-card">
-              <div class="dashboard-mini-label">Intel Push</div>
-              <div class="dashboard-mini-value" id="intelPushValue">On</div>
+              <div class="dashboard-mini-label">Base Airport</div>
+              <div class="dashboard-mini-value" id="baseAirportValue">JFK</div>
             </div>
             <div class="dashboard-mini-card">
-              <div class="dashboard-mini-label">Ops Push</div>
-              <div class="dashboard-mini-value" id="opsPushValue">On</div>
+              <div class="dashboard-mini-label">Aircraft</div>
+              <div class="dashboard-mini-value" id="aircraftValue">Not set</div>
+            </div>
+            <div class="dashboard-mini-card">
+              <div class="dashboard-mini-label">Airline</div>
+              <div class="dashboard-mini-value" id="airlineValue">Not set</div>
+            </div>
+            <div class="dashboard-mini-card">
+              <div class="dashboard-mini-label">Role</div>
+              <div class="dashboard-mini-value" id="roleValue">Not set</div>
             </div>
           </div>
-        </div>
 
-        <div class="dashboard-panel">
-          <div class="dashboard-section-header">
-            <div>
-              <div class="section-badge">Community</div>
-              <h3>Recent Activity</h3>
+          <div class="dashboard-preferences">
+            <div class="dashboard-chip" id="opsChip">Ops context loading</div>
+            <div class="dashboard-chip" id="mapChip">Crew map loading</div>
+            <div class="dashboard-chip" id="intelChip">Intel loading</div>
+          </div>
+        </article>
+
+        <div class="dashboard-stack">
+          <article class="dashboard-panel">
+            <div class="dashboard-section-header">
+              <div>
+                <div class="section-badge">Account Health</div>
+                <h3>What Matters Right Now</h3>
+              </div>
             </div>
-            <a href="community.html" class="gradient-text dashboard-link">Open Community</a>
-          </div>
-          <div id="recentPostsList" class="dashboard-list">
-            <div class="dashboard-empty">Your recent posts will appear here.</div>
-          </div>
-        </div>
-
-        <div class="dashboard-panel">
-          <div class="dashboard-section-header">
-            <div>
-              <div class="section-badge">Marketplace</div>
-              <h3>Recent Listings</h3>
+            <div class="dashboard-health-grid">
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Access Tier</div>
+                <div class="dashboard-mini-value" id="accessTierValue">Checking</div>
+              </div>
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Emergency Contact</div>
+                <div class="dashboard-mini-value" id="emergencyReadinessValue">Pending</div>
+              </div>
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Active Ops Airport</div>
+                <div class="dashboard-mini-value" id="activeOpsAirportValue">JFK</div>
+              </div>
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Community Presence</div>
+                <div class="dashboard-mini-value" id="communityPresenceValue">Waiting</div>
+              </div>
             </div>
-            <a href="marketplace.html" class="gradient-text dashboard-link">Open Marketplace</a>
-          </div>
-          <div id="recentListingsList" class="dashboard-list">
-            <div class="dashboard-empty">Listings you create will appear here.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+          </article>
 
-  <footer class="footer">
-    <div class="footer-bottom">
-      <span>© 2026 YoFly Crew. All rights reserved.</span>
-    </div>
-  </footer>
+          <article class="dashboard-panel">
+            <div class="dashboard-section-header">
+              <div>
+                <div class="section-badge">Next Best Step</div>
+                <h3 id="nextStepTitle">Loading your dashboard plan</h3>
+              </div>
+            </div>
+            <p class="dashboard-section-copy dashboard-section-copy-wide" id="nextStepCopy">As soon as your account data is available, this area will call out the most useful next action.</p>
+            <div class="dashboard-quick-grid">
+              <a class="dashboard-quick-link" href="#profile-editor">
+                <span class="dashboard-quick-kicker">Profile</span>
+                <strong>Update Your Details</strong>
+              </a>
+              <a class="dashboard-quick-link" href="#ops-center">
+                <span class="dashboard-quick-kicker">Ops</span>
+                <strong>Review Preferences</strong>
+              </a>
+              <a class="dashboard-quick-link" href="#verification">
+                <span class="dashboard-quick-kicker">Trust</span>
+                <strong>Check Verification</strong>
+              </a>
+              <a class="dashboard-quick-link" href="#activity">
+                <span class="dashboard-quick-kicker">Presence</span>
+                <strong>See Recent Activity</strong>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-stats-strip reveal-up">
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Posts</span>
+          <span class="dashboard-stat-value" id="totalPostsValue">0</span>
+        </div>
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Vents</span>
+          <span class="dashboard-stat-value" id="ventPostsValue">0</span>
+        </div>
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Saved</span>
+          <span class="dashboard-stat-value" id="savedPostsValue">0</span>
+        </div>
+        <div class="dashboard-stat-card">
+          <span class="dashboard-stat-label">Listings</span>
+          <span class="dashboard-stat-value" id="totalListingsValue">0</span>
+        </div>
+      </section>
+
+      <section class="dashboard-main-grid reveal-up">
+        <div class="dashboard-stack">
+          <article class="dashboard-panel" id="profile-editor">
+            <div class="dashboard-section-header">
+              <div>
+                <div class="section-badge">Editable Profile</div>
+                <h3>Manage Your Shared Crew Identity</h3>
+              </div>
+              <p class="dashboard-section-copy dashboard-section-copy-wide">Everything you save here can power your website dashboard and the mobile app profile experience.</p>
+            </div>
+
+            <form id="profileForm" class="dashboard-form">
+              <div class="dashboard-form-section">
+                <div class="dashboard-mini-label">Identity</div>
+                <div class="dashboard-form-grid">
+                  <div>
+                    <label class="dashboard-label" for="fullNameInput">Full Name</label>
+                    <input id="fullNameInput" name="full_name" type="text" class="dashboard-input" placeholder="Your full name" />
+                  </div>
+                  <div>
+                    <label class="dashboard-label" for="airlineInput">Airline / Company</label>
+                    <input id="airlineInput" name="airline" type="text" class="dashboard-input" placeholder="Delta, Emirates, United..." />
+                  </div>
+                  <div>
+                    <label class="dashboard-label" for="baseAirportInput">Base Airport</label>
+                    <input id="baseAirportInput" name="base_airport" type="text" class="dashboard-input" placeholder="JFK" maxlength="4" />
+                  </div>
+                  <div>
+                    <label class="dashboard-label" for="aircraftInput">Aircraft / Fleet</label>
+                    <input id="aircraftInput" name="aircraft" type="text" class="dashboard-input" placeholder="A320, B737, Widebody..." />
+                  </div>
+                  <div>
+                    <label class="dashboard-label" for="avatarUrlInput">Avatar Image URL</label>
+                    <input id="avatarUrlInput" name="avatar_url" type="url" class="dashboard-input" placeholder="https://..." />
+                  </div>
+                  <div>
+                    <label class="dashboard-label" for="airlineEmailInput">Account Email</label>
+                    <input id="airlineEmailInput" name="airline_email" type="email" class="dashboard-input" readonly />
+                  </div>
+                </div>
+              </div>
+
+              <div class="dashboard-form-section">
+                <div class="dashboard-mini-label">Role</div>
+                <div class="dashboard-role-grid">
+                  <label class="dashboard-role-card">
+                    <input type="radio" name="role" value="PILOT" />
+                    <span class="dashboard-role-icon">Pilot</span>
+                    <span class="dashboard-role-text">Flight deck focused crew member</span>
+                  </label>
+                  <label class="dashboard-role-card">
+                    <input type="radio" name="role" value="FA" />
+                    <span class="dashboard-role-icon">Cabin</span>
+                    <span class="dashboard-role-text">Cabin crew and inflight support</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="dashboard-form-section">
+                <div class="dashboard-mini-label">Safety & Contact</div>
+                <div class="dashboard-form-grid">
+                  <div>
+                    <label class="dashboard-label" for="emergencyContactNameInput">Emergency Contact Name</label>
+                    <input id="emergencyContactNameInput" name="emergency_contact_name" type="text" class="dashboard-input" placeholder="Who should we keep on file?" />
+                  </div>
+                  <div>
+                    <label class="dashboard-label" for="emergencyContactPhoneInput">Emergency Contact Phone</label>
+                    <input id="emergencyContactPhoneInput" name="emergency_contact_phone" type="tel" class="dashboard-input" placeholder="(555) 555-5555" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="dashboard-form-actions">
+                <button type="submit" class="btn btn-primary">Save Dashboard Profile</button>
+                <a href="verify.html" class="btn btn-ghost">Open Verification Center</a>
+              </div>
+              <div id="profileSaveMessage" class="dashboard-inline-message"></div>
+            </form>
+          </article>
+
+          <article class="dashboard-panel" id="activity">
+            <div class="dashboard-section-header">
+              <div>
+                <div class="section-badge">Community Activity</div>
+                <h3>Recent Posts and Presence</h3>
+              </div>
+              <a href="community.html" class="gradient-text dashboard-link">Open Community</a>
+            </div>
+            <div id="recentPostsList" class="dashboard-list">
+              <div class="dashboard-empty">Your recent posts will appear here.</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="dashboard-stack">
+          <article class="dashboard-panel" id="ops-center">
+            <div class="dashboard-section-header">
+              <div>
+                <div class="section-badge">Ops Preferences</div>
+                <h3>Control Your Crew Experience</h3>
+              </div>
+            </div>
+            <div class="dashboard-preferences-grid">
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Ops Context</div>
+                <div class="dashboard-mini-value" id="opsContextValue">BASE</div>
+              </div>
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Map Visibility</div>
+                <div class="dashboard-mini-value" id="mapVisibilityValue">Visible</div>
+              </div>
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Intel Push</div>
+                <div class="dashboard-mini-value" id="intelPushValue">On</div>
+              </div>
+              <div class="dashboard-mini-card">
+                <div class="dashboard-mini-label">Ops Push</div>
+                <div class="dashboard-mini-value" id="opsPushValue">On</div>
+              </div>
+            </div>
+
+            <div id="preferencesForm" class="dashboard-form dashboard-form-tight">
+              <div class="dashboard-form-grid">
+                <div>
+                  <label class="dashboard-label" for="opsContextInput">Ops Context Mode</label>
+                  <select id="opsContextInput" name="ops_context_mode" class="dashboard-input">
+                    <option value="BASE">Base</option>
+                    <option value="LAYOVER">Layover</option>
+                    <option value="TRIP">Trip</option>
+                    <option value="MANUAL">Manual</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="dashboard-label" for="activeOpsAirportInput">Active Ops Airport</label>
+                  <input id="activeOpsAirportInput" name="active_ops_airport" type="text" class="dashboard-input" placeholder="JFK" maxlength="4" />
+                </div>
+              </div>
+              <div class="dashboard-toggle-grid">
+                <label class="dashboard-toggle-card">
+                  <input id="visibleOnCrewMapInput" name="visible_on_crew_map" type="checkbox" />
+                  <span class="dashboard-toggle-title">Visible On Crew Map</span>
+                  <span class="dashboard-toggle-copy">Let other trusted crew see you in the shared map context.</span>
+                </label>
+                <label class="dashboard-toggle-card">
+                  <input id="intelPushInput" name="intel_push" type="checkbox" />
+                  <span class="dashboard-toggle-title">Intel Push</span>
+                  <span class="dashboard-toggle-copy">Get notified when airport friction or crew intel changes.</span>
+                </label>
+                <label class="dashboard-toggle-card">
+                  <input id="opsPushInput" name="ops_push" type="checkbox" />
+                  <span class="dashboard-toggle-title">Ops Push</span>
+                  <span class="dashboard-toggle-copy">Stay on top of live ops alerts relevant to your hub or trip.</span>
+                </label>
+              </div>
+            </div>
+          </article>
+
+          <article class="dashboard-panel" id="verification">
+            <div class="dashboard-section-header">
+              <div>
+                <div class="section-badge">Verification</div>
+                <h3 id="verificationDetailTitle">Verification is being checked</h3>
+              </div>
+              <a href="verify.html" class="gradient-text dashboard-link">Open Verification</a>
+            </div>
+            <div class="dashboard-verification-card">
+              <p class="dashboard-verification-copy" id="verificationDetailCopy">Once approved, your crew trust features and marketplace access will reflect here.</p>
+            </div>
+          </article>
+
+          <article class="dashboard-panel" id="marketplace">
+            <div class="dashboard-section-header">
+              <div>
+                <div class="section-badge">Marketplace</div>
+                <h3>Recent Listings and Access</h3>
+              </div>
+              <a href="marketplace.html" class="gradient-text dashboard-link">Open Marketplace</a>
+            </div>
+            <div id="recentListingsList" class="dashboard-list">
+              <div class="dashboard-empty">Listings you create will appear here.</div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
