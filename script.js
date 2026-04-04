@@ -1284,19 +1284,19 @@ function initHeroFlightMap() {
     { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
   ];
   const routes = [
-    { from: 0, to: 1, tone: 'cyan' },
-    { from: 1, to: 4, tone: 'cyan' },
-    { from: 4, to: 6, tone: 'cyan' },
-    { from: 6, to: 8, tone: 'cyan' },
-    { from: 1, to: 6, tone: 'cyan' },
-    { from: 2, to: 3, tone: 'purple' },
-    { from: 3, to: 5, tone: 'purple' },
-    { from: 5, to: 7, tone: 'purple' },
-    { from: 7, to: 9, tone: 'purple' },
-    { from: 2, to: 7, tone: 'purple' },
-    { from: 1, to: 2, tone: 'cyan' },
-    { from: 4, to: 5, tone: 'purple' },
-    { from: 6, to: 7, tone: 'cyan' },
+    { from: 0, to: 1, tone: 'cyan', markers: 3, spacing: 0.3, speed: 1 },
+    { from: 1, to: 4, tone: 'cyan', markers: 4, spacing: 0.23, speed: 1.05 },
+    { from: 4, to: 6, tone: 'cyan', markers: 4, spacing: 0.22, speed: 0.96 },
+    { from: 6, to: 8, tone: 'cyan', markers: 5, spacing: 0.18, speed: 0.9 },
+    { from: 1, to: 6, tone: 'cyan', markers: 5, spacing: 0.17, speed: 0.84 },
+    { from: 2, to: 3, tone: 'purple', markers: 3, spacing: 0.28, speed: 1.08 },
+    { from: 3, to: 5, tone: 'purple', markers: 4, spacing: 0.22, speed: 1.04 },
+    { from: 5, to: 7, tone: 'purple', markers: 4, spacing: 0.21, speed: 0.98 },
+    { from: 7, to: 9, tone: 'purple', markers: 5, spacing: 0.18, speed: 0.88 },
+    { from: 2, to: 7, tone: 'purple', markers: 5, spacing: 0.16, speed: 0.82 },
+    { from: 1, to: 2, tone: 'cyan', markers: 3, spacing: 0.27, speed: 1.1 },
+    { from: 4, to: 5, tone: 'purple', markers: 3, spacing: 0.26, speed: 1.06 },
+    { from: 6, to: 7, tone: 'cyan', markers: 4, spacing: 0.22, speed: 0.94 },
   ];
 
   let width = 0;
@@ -1334,20 +1334,24 @@ function initHeroFlightMap() {
     context.stroke();
     context.setLineDash([]);
 
-    const markerOffsets = [0, 0.28, 0.56];
-    markerOffsets.forEach((offset, index) => {
-      const traveler = (time * 0.00008 + (route.from + 1) * 0.13 + route.to * 0.05 + offset) % 1;
+    const markerCount = route.markers || 3;
+    const markerSpacing = route.spacing || 0.28;
+    const routeSpeed = route.speed || 1;
+
+    Array.from({ length: markerCount }, (_, index) => index * markerSpacing).forEach((offset, index) => {
+      const traveler =
+        (time * 0.00008 * routeSpeed + (route.from + 1) * 0.13 + route.to * 0.05 + offset) % 1;
       const t = traveler;
       const inv = 1 - t;
       const x = inv * inv * startX + 2 * inv * t * controlX + t * t * endX;
       const y = inv * inv * startY + 2 * inv * t * controlY + t * t * endY;
-      const size = index === 0 ? 3.2 : 2.4;
-      const alpha = index === 0 ? 0.98 : 0.5 - index * 0.08;
+      const size = index === 0 ? 3.2 : Math.max(1.7, 2.8 - index * 0.22);
+      const alpha = index === 0 ? 0.98 : Math.max(0.2, 0.54 - index * 0.08);
 
       context.beginPath();
       context.arc(x, y, size, 0, Math.PI * 2);
       context.fillStyle = palette.traveler.replace(/0\.98\)/, `${alpha})`);
-      context.shadowBlur = index === 0 ? 20 : 12;
+      context.shadowBlur = index === 0 ? 20 : Math.max(6, 12 - index * 2);
       context.shadowColor = palette.travelerShadow;
       context.fill();
       context.shadowBlur = 0;
