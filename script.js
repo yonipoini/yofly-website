@@ -1283,7 +1283,7 @@ function initHeroFlightMap() {
     { key: 'HND', x: 0.94, y: 0.56, labelDx: -14, labelDy: -12, align: 'right', tone: 'cyan' },
     { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
     { key: 'SEA', x: 0.10, y: 0.33, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.72, labelScale: 0.76 },
-    { key: 'LAS', x: 0.24, y: 0.43, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.76 },
+    { key: 'LAS', x: 0.24, y: 0.43, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.76, hidden: true },
     { key: 'DEN', x: 0.34, y: 0.58, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.74, labelScale: 0.76, hidden: true },
     { key: 'MIA', x: 0.47, y: 0.82, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.68, labelScale: 0.82 },
     { key: 'BOS', x: 0.44, y: 0.71, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.7, labelScale: 0.76 },
