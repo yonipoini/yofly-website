@@ -1285,10 +1285,10 @@ function initHeroFlightMap() {
     { key: 'SEA', x: 0.10, y: 0.33, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.72 },
     { key: 'LAS', x: 0.24, y: 0.43, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.7 },
     { key: 'DEN', x: 0.34, y: 0.58, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.74 },
-    { key: 'MIA', x: 0.18, y: 0.70, labelDx: -10, labelDy: -10, align: 'right', tone: 'purple', showLabel: true, scale: 0.68, labelScale: 0.82 },
+    { key: 'MIA', x: 0.60, y: 0.84, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.68, labelScale: 0.82 },
     { key: 'BOS', x: 0.44, y: 0.71, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.7 },
     { key: 'MCO', x: 0.30, y: 0.80, labelDx: 0, labelDy: -14, align: 'center', tone: 'cyan', showLabel: true, scale: 0.68, labelScale: 0.82 },
-    { key: 'PHX', x: 0.08, y: 0.56, labelDx: 12, labelDy: -8, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.82 },
+    { key: 'PHX', x: 0.07, y: 0.68, labelDx: 12, labelDy: -8, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.82 },
     { key: 'CLT', x: 0.54, y: 0.60, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.66, labelScale: 0.82 },
   ];
   const routes = [
