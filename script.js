@@ -1275,36 +1275,36 @@ function initHeroFlightMap() {
     { key: 'LAX', x: 0.04, y: 0.18, labelDx: 14, labelDy: -10, align: 'left', tone: 'cyan' },
     { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
     { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
-    { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
+    { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', mobileHidden: true },
     { key: 'ATL', x: 0.46, y: 0.28, labelDx: 10, labelDy: -12, align: 'left', tone: 'cyan', showLabel: true, scale: 0.9, labelScale: 0.78, hidden: true },
     { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
     { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
     { key: 'DXB', x: 0.91, y: 0.32, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
     { key: 'HND', x: 0.94, y: 0.56, labelDx: -14, labelDy: -12, align: 'right', tone: 'cyan' },
     { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
-    { key: 'SEA', x: 0.10, y: 0.33, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.72, labelScale: 0.76 },
+    { key: 'SEA', x: 0.10, y: 0.33, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.72, labelScale: 0.76, mobileHidden: true },
     { key: 'LAS', x: 0.24, y: 0.43, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.76, hidden: true },
     { key: 'DEN', x: 0.34, y: 0.58, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.74, labelScale: 0.76, hidden: true },
-    { key: 'MIA', x: 0.47, y: 0.82, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.68, labelScale: 0.82 },
-    { key: 'BOS', x: 0.44, y: 0.71, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.7, labelScale: 0.76 },
+    { key: 'MIA', x: 0.47, y: 0.82, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.68, labelScale: 0.82, mobileHidden: true },
+    { key: 'BOS', x: 0.44, y: 0.71, labelDx: 10, labelDy: -10, align: 'left', tone: 'cyan', showLabel: true, scale: 0.7, labelScale: 0.76, mobileHidden: true },
     { key: 'MCO', x: 0.30, y: 0.80, labelDx: 0, labelDy: -14, align: 'center', tone: 'cyan', showLabel: true, scale: 0.68, labelScale: 0.82 },
-    { key: 'PHX', x: 0.04, y: 0.49, labelDx: 12, labelDy: -8, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.82 },
-    { key: 'CLT', x: 0.54, y: 0.60, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.66, labelScale: 0.82 },
+    { key: 'PHX', x: 0.04, y: 0.49, labelDx: 12, labelDy: -8, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.82, mobileHidden: true },
+    { key: 'CLT', x: 0.54, y: 0.60, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.66, labelScale: 0.82, mobileHidden: true },
   ];
   const routes = [
-    { from: 0, to: 1, tone: 'cyan', markers: 3, spacing: 0.3, speed: 1 },
+    { from: 0, to: 1, tone: 'cyan', markers: 3, spacing: 0.3, speed: 1, mobileVisible: true },
     { from: 1, to: 4, tone: 'cyan', markers: 4, spacing: 0.23, speed: 1.05 },
     { from: 4, to: 6, tone: 'cyan', markers: 4, spacing: 0.22, speed: 0.96 },
-    { from: 6, to: 8, tone: 'cyan', markers: 5, spacing: 0.18, speed: 0.9 },
-    { from: 1, to: 6, tone: 'cyan', markers: 5, spacing: 0.17, speed: 0.84 },
+    { from: 6, to: 8, tone: 'cyan', markers: 5, spacing: 0.18, speed: 0.9, mobileVisible: true },
+    { from: 1, to: 6, tone: 'cyan', markers: 5, spacing: 0.17, speed: 0.84, mobileVisible: true },
     { from: 2, to: 3, tone: 'purple', markers: 3, spacing: 0.28, speed: 1.08 },
     { from: 3, to: 5, tone: 'purple', markers: 4, spacing: 0.22, speed: 1.04 },
-    { from: 5, to: 7, tone: 'purple', markers: 4, spacing: 0.21, speed: 0.98 },
-    { from: 7, to: 9, tone: 'purple', markers: 5, spacing: 0.18, speed: 0.88 },
-    { from: 2, to: 7, tone: 'purple', markers: 5, spacing: 0.16, speed: 0.82 },
-    { from: 1, to: 2, tone: 'cyan', markers: 3, spacing: 0.27, speed: 1.1 },
+    { from: 5, to: 7, tone: 'purple', markers: 4, spacing: 0.21, speed: 0.98, mobileVisible: true },
+    { from: 7, to: 9, tone: 'purple', markers: 5, spacing: 0.18, speed: 0.88, mobileVisible: true },
+    { from: 2, to: 7, tone: 'purple', markers: 5, spacing: 0.16, speed: 0.82, mobileVisible: true },
+    { from: 1, to: 2, tone: 'cyan', markers: 3, spacing: 0.27, speed: 1.1, mobileVisible: true },
     { from: 4, to: 5, tone: 'purple', markers: 3, spacing: 0.26, speed: 1.06 },
-    { from: 6, to: 7, tone: 'cyan', markers: 4, spacing: 0.22, speed: 0.94 },
+    { from: 6, to: 7, tone: 'cyan', markers: 4, spacing: 0.22, speed: 0.94, mobileVisible: true },
     { from: 16, to: 11, tone: 'purple', markers: 2, spacing: 0.36, speed: 0.76 },
     { from: 11, to: 12, tone: 'cyan', markers: 2, spacing: 0.34, speed: 0.72 },
     { from: 13, to: 15, tone: 'purple', markers: 2, spacing: 0.34, speed: 0.7 },
@@ -1326,9 +1326,16 @@ function initHeroFlightMap() {
   };
 
   const drawRoute = (route, time) => {
+    const isMobile = width <= 768;
     const start = hubs[route.from];
     const end = hubs[route.to];
-    if (!start || !end || start.hidden || end.hidden) {
+    if (
+      !start ||
+      !end ||
+      start.hidden ||
+      end.hidden ||
+      (isMobile && (start.mobileHidden || end.mobileHidden || !route.mobileVisible))
+    ) {
       return;
     }
     const palette = palettes[route.tone] || palettes.purple;
@@ -1349,7 +1356,7 @@ function initHeroFlightMap() {
     context.stroke();
     context.setLineDash([]);
 
-    const markerCount = route.markers || 3;
+    const markerCount = isMobile ? Math.min(route.markers || 3, 2) : route.markers || 3;
     const markerSpacing = route.spacing || 0.28;
     const routeSpeed = route.speed || 1;
 
@@ -1375,13 +1382,14 @@ function initHeroFlightMap() {
 
   const draw = (time) => {
     context.clearRect(0, 0, width, height);
-    const showLabels = width >= 900;
-    const labelSize = width >= 1180 ? 11 : 10;
+    const isMobile = width <= 768;
+    const showLabels = width >= 900 || isMobile;
+    const labelSize = isMobile ? 8 : width >= 1180 ? 11 : 10;
 
     routes.forEach((route) => drawRoute(route, time));
 
     hubs.forEach((hub, index) => {
-      if (hub.hidden) {
+      if (hub.hidden || (isMobile && hub.mobileHidden)) {
         return;
       }
       const palette = palettes[hub.tone] || palettes.purple;
@@ -1415,7 +1423,7 @@ function initHeroFlightMap() {
 
       if (showLabels && hub.showLabel !== false) {
         const hubLabelSize = Math.max(
-          9,
+          isMobile ? 7 : 9,
           Math.round(labelSize * (hub.labelScale || Math.max(0.86, Math.min(1, hubScale + 0.1))))
         );
         context.textAlign = hub.align || 'left';
