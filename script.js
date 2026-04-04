@@ -17,6 +17,7 @@ const AUTH_REDIRECT_ORIGIN =
     ? PRODUCTION_ORIGIN
     : window.location.origin;
 const AUTH_REDIRECT_URL = `${AUTH_REDIRECT_ORIGIN}/profile`;
+const LOGIN_URL = `${window.location.origin}/login`;
 
 const pageName = window.location.pathname.split('/').pop() || 'index';
 const normalizedPageName = pageName.replace(/\.html$/i, '').toLowerCase();
@@ -109,6 +110,36 @@ const setDisplay = (id, display) => {
   const element = document.getElementById(id);
   if (element) element.style.display = display;
 };
+
+async function handleSignOut(button) {
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Signing Out...';
+  }
+
+  try {
+    if (supabaseClient) {
+      await supabaseClient.auth.signOut({ scope: 'local' });
+    }
+  } catch (error) {
+    console.warn('Sign out fallback redirect after auth error:', error);
+  } finally {
+    window.location.replace(LOGIN_URL);
+  }
+}
+
+function bindSignOutButtons() {
+  document.querySelectorAll('#signOutBtn').forEach((button) => {
+    if (button.dataset.bound === 'true') {
+      return;
+    }
+
+    button.dataset.bound = 'true';
+    button.addEventListener('click', () => {
+      void handleSignOut(button);
+    });
+  });
+}
 
 async function ensureSharedProfile(user) {
   if (!supabaseClient || !user) return null;
@@ -316,15 +347,9 @@ async function initProfilePage(user) {
   }
 
   const profileForm = document.getElementById('profileForm');
-  const signOutBtn = document.getElementById('signOutBtn');
   const profileSaveMessage = document.getElementById('profileSaveMessage');
 
-  if (signOutBtn) {
-    signOutBtn.addEventListener('click', async () => {
-      await supabaseClient.auth.signOut();
-      window.location.href = 'login.html';
-    });
-  }
+  bindSignOutButtons();
 
   if (profileForm) {
     profileForm.addEventListener('submit', async (event) => {
@@ -515,7 +540,7 @@ if (supabaseClient) {
     }
 
     if (event === 'SIGNED_OUT' && isProfilePage) {
-      window.location.href = 'login.html';
+      window.location.replace(LOGIN_URL);
     }
   });
 }
@@ -725,6 +750,7 @@ if (nav) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+  bindSignOutButtons();
   bindLoginForm();
   bindVentPosting();
   await syncCurrentSession();
