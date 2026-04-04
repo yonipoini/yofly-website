@@ -1285,11 +1285,11 @@ function initHeroFlightMap() {
     { key: 'SEA', x: 0.10, y: 0.33, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.72 },
     { key: 'LAS', x: 0.24, y: 0.43, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.7 },
     { key: 'DEN', x: 0.34, y: 0.58, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.74 },
-    { key: 'MIA', x: 0.18, y: 0.70, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.68 },
+    { key: 'MIA', x: 0.18, y: 0.70, labelDx: -10, labelDy: -10, align: 'right', tone: 'purple', showLabel: true, scale: 0.68, labelScale: 0.82 },
     { key: 'BOS', x: 0.44, y: 0.71, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.7 },
-    { key: 'MCO', x: 0.30, y: 0.80, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.68 },
-    { key: 'PHX', x: 0.08, y: 0.56, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.7 },
-    { key: 'CLT', x: 0.50, y: 0.56, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.66 },
+    { key: 'MCO', x: 0.30, y: 0.80, labelDx: 0, labelDy: -14, align: 'center', tone: 'cyan', showLabel: true, scale: 0.68, labelScale: 0.82 },
+    { key: 'PHX', x: 0.08, y: 0.56, labelDx: 12, labelDy: -8, align: 'left', tone: 'purple', showLabel: true, scale: 0.7, labelScale: 0.82 },
+    { key: 'CLT', x: 0.54, y: 0.60, labelDx: 10, labelDy: -10, align: 'left', tone: 'purple', showLabel: true, scale: 0.66, labelScale: 0.82 },
   ];
   const routes = [
     { from: 0, to: 1, tone: 'cyan', markers: 3, spacing: 0.3, speed: 1 },
@@ -1305,6 +1305,10 @@ function initHeroFlightMap() {
     { from: 1, to: 2, tone: 'cyan', markers: 3, spacing: 0.27, speed: 1.1 },
     { from: 4, to: 5, tone: 'purple', markers: 3, spacing: 0.26, speed: 1.06 },
     { from: 6, to: 7, tone: 'cyan', markers: 4, spacing: 0.22, speed: 0.94 },
+    { from: 16, to: 11, tone: 'purple', markers: 2, spacing: 0.36, speed: 0.76 },
+    { from: 11, to: 12, tone: 'cyan', markers: 2, spacing: 0.34, speed: 0.72 },
+    { from: 13, to: 15, tone: 'purple', markers: 2, spacing: 0.34, speed: 0.7 },
+    { from: 15, to: 17, tone: 'cyan', markers: 2, spacing: 0.35, speed: 0.74 },
   ];
 
   let width = 0;
@@ -1404,10 +1408,14 @@ function initHeroFlightMap() {
       context.shadowBlur = 0;
 
       if (showLabels && hub.showLabel !== false) {
+        const hubLabelSize = Math.max(
+          9,
+          Math.round(labelSize * (hub.labelScale || Math.max(0.86, Math.min(1, hubScale + 0.1))))
+        );
         context.textAlign = hub.align || 'left';
         context.textBaseline = 'middle';
         context.fillStyle = palette.label;
-        context.font = `600 ${labelSize}px Inter, sans-serif`;
+        context.font = `600 ${hubLabelSize}px Inter, sans-serif`;
         context.fillText(hub.key, x + hub.labelDx, y + hub.labelDy);
         context.textAlign = 'left';
         context.textBaseline = 'alphabetic';
