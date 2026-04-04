@@ -1249,35 +1249,54 @@ function initHeroFlightMap() {
     return;
   }
 
+  const palettes = {
+    cyan: {
+      route: 'rgba(83, 225, 255, 0.12)',
+      traveler: 'rgba(118, 238, 255, 0.98)',
+      travelerShadow: 'rgba(79, 220, 255, 0.9)',
+      outer: (pulse) => `rgba(74, 214, 255, ${0.04 + pulse * 0.08})`,
+      ring: (shimmer) => `rgba(143, 246, 255, ${0.24 + shimmer * 0.16})`,
+      core: 'rgba(220, 252, 255, 0.98)',
+      coreShadow: 'rgba(70, 214, 255, 0.88)',
+      label: 'rgba(210, 248, 255, 0.78)',
+    },
+    purple: {
+      route: 'rgba(196, 88, 255, 0.11)',
+      traveler: 'rgba(255, 92, 244, 0.98)',
+      travelerShadow: 'rgba(194, 82, 255, 0.92)',
+      outer: (pulse) => `rgba(164, 70, 255, ${0.04 + pulse * 0.08})`,
+      ring: (shimmer) => `rgba(244, 117, 255, ${0.22 + shimmer * 0.18})`,
+      core: 'rgba(255, 214, 255, 0.98)',
+      coreShadow: 'rgba(210, 92, 255, 0.88)',
+      label: 'rgba(255, 230, 255, 0.74)',
+    },
+  };
   const hubs = [
-    { key: 'LAX', x: 0.08, y: 0.22, labelDx: 10, labelDy: -12, align: 'left' },
-    { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center' },
-    { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center' },
-    { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center' },
-    { key: 'ATL', x: 0.52, y: 0.18, labelDx: 0, labelDy: -12, align: 'center' },
-    { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center' },
-    { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center' },
-    { key: 'DXB', x: 0.91, y: 0.32, labelDx: -14, labelDy: -12, align: 'right' },
-    { key: 'HND', x: 0.94, y: 0.56, labelDx: -14, labelDy: -12, align: 'right' },
-    { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right' },
+    { key: 'LAX', x: 0.08, y: 0.22, labelDx: 10, labelDy: -12, align: 'left', tone: 'cyan' },
+    { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
+    { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
+    { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
+    { key: 'ATL', x: 0.52, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
+    { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
+    { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
+    { key: 'DXB', x: 0.91, y: 0.32, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
+    { key: 'HND', x: 0.94, y: 0.56, labelDx: -14, labelDy: -12, align: 'right', tone: 'cyan' },
+    { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
   ];
   const routes = [
-    [0, 1],
-    [1, 2],
-    [2, 3],
-    [3, 4],
-    [4, 5],
-    [5, 6],
-    [6, 7],
-    [7, 8],
-    [8, 9],
-    [0, 2],
-    [1, 4],
-    [2, 5],
-    [3, 6],
-    [4, 7],
-    [5, 8],
-    [6, 9],
+    { from: 0, to: 1, tone: 'cyan' },
+    { from: 1, to: 4, tone: 'cyan' },
+    { from: 4, to: 6, tone: 'cyan' },
+    { from: 6, to: 8, tone: 'cyan' },
+    { from: 1, to: 6, tone: 'cyan' },
+    { from: 2, to: 3, tone: 'purple' },
+    { from: 3, to: 5, tone: 'purple' },
+    { from: 5, to: 7, tone: 'purple' },
+    { from: 7, to: 9, tone: 'purple' },
+    { from: 2, to: 7, tone: 'purple' },
+    { from: 1, to: 2, tone: 'cyan' },
+    { from: 4, to: 5, tone: 'purple' },
+    { from: 6, to: 7, tone: 'cyan' },
   ];
 
   let width = 0;
@@ -1294,9 +1313,10 @@ function initHeroFlightMap() {
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
   };
 
-  const drawRoute = (from, to, time) => {
-    const start = hubs[from];
-    const end = hubs[to];
+  const drawRoute = (route, time) => {
+    const start = hubs[route.from];
+    const end = hubs[route.to];
+    const palette = palettes[route.tone] || palettes.purple;
     const startX = start.x * width;
     const startY = start.y * height;
     const endX = end.x * width;
@@ -1308,13 +1328,13 @@ function initHeroFlightMap() {
     context.beginPath();
     context.moveTo(startX, startY);
     context.quadraticCurveTo(controlX, controlY, endX, endY);
-    context.strokeStyle = 'rgba(196, 88, 255, 0.11)';
+    context.strokeStyle = palette.route;
     context.lineWidth = 1;
     context.setLineDash([7, 9]);
     context.stroke();
     context.setLineDash([]);
 
-    const traveler = (time * 0.00008 + (from + 1) * 0.13 + to * 0.05) % 1;
+    const traveler = (time * 0.00008 + (route.from + 1) * 0.13 + route.to * 0.05) % 1;
     const t = traveler;
     const inv = 1 - t;
     const x = inv * inv * startX + 2 * inv * t * controlX + t * t * endX;
@@ -1322,9 +1342,9 @@ function initHeroFlightMap() {
 
     context.beginPath();
     context.arc(x, y, 3.1, 0, Math.PI * 2);
-    context.fillStyle = 'rgba(255, 92, 244, 0.98)';
+    context.fillStyle = palette.traveler;
     context.shadowBlur = 20;
-    context.shadowColor = 'rgba(194, 82, 255, 0.92)';
+    context.shadowColor = palette.travelerShadow;
     context.fill();
     context.shadowBlur = 0;
   };
@@ -1334,9 +1354,10 @@ function initHeroFlightMap() {
     const showLabels = width >= 900;
     const labelSize = width >= 1180 ? 11 : 10;
 
-    routes.forEach(([from, to]) => drawRoute(from, to, time));
+    routes.forEach((route) => drawRoute(route, time));
 
     hubs.forEach((hub, index) => {
+      const palette = palettes[hub.tone] || palettes.purple;
       const x = hub.x * width;
       const y = hub.y * height;
       const pulse = 0.55 + Math.sin(time * 0.002 + index) * 0.35;
@@ -1346,27 +1367,27 @@ function initHeroFlightMap() {
 
       context.beginPath();
       context.arc(x, y, outerRadius, 0, Math.PI * 2);
-      context.fillStyle = `rgba(164, 70, 255, ${0.04 + pulse * 0.08})`;
+      context.fillStyle = palette.outer(pulse);
       context.fill();
 
       context.beginPath();
       context.arc(x, y, ringRadius, 0, Math.PI * 2);
-      context.strokeStyle = `rgba(244, 117, 255, ${0.22 + shimmer * 0.18})`;
+      context.strokeStyle = palette.ring(shimmer);
       context.lineWidth = 1.4;
       context.stroke();
 
       context.beginPath();
       context.arc(x, y, 3.2, 0, Math.PI * 2);
-      context.fillStyle = 'rgba(255, 214, 255, 0.98)';
+      context.fillStyle = palette.core;
       context.shadowBlur = 16;
-      context.shadowColor = 'rgba(210, 92, 255, 0.88)';
+      context.shadowColor = palette.coreShadow;
       context.fill();
       context.shadowBlur = 0;
 
       if (showLabels) {
         context.textAlign = hub.align || 'left';
         context.textBaseline = 'middle';
-        context.fillStyle = 'rgba(255, 230, 255, 0.74)';
+        context.fillStyle = palette.label;
         context.font = `600 ${labelSize}px Inter, sans-serif`;
         context.fillText(hub.key, x + hub.labelDx, y + hub.labelDy);
         context.textAlign = 'left';
