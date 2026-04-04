@@ -1379,6 +1379,46 @@ function initHeroTextAnimation() {
   );
 }
 
+function initPhoneMessageSimulation() {
+  const incomingMessage = document.getElementById('phoneIncomingMessage');
+  const incomingText = document.getElementById('phoneIncomingText');
+  const typingIndicator = document.getElementById('phoneTypingIndicator');
+  const phoneMessages = document.getElementById('phoneMessages');
+
+  if (!incomingMessage || !incomingText || !typingIndicator || !phoneMessages) {
+    return;
+  }
+
+  const messages = [
+    'Crew van is outside Terminal 5 now.',
+    'Heads up: lounge is letting crew in through the side desk.',
+    'Gate moved to B22. Still enough time for coffee.',
+    'Shuttle to the crash pad leaves in 12 minutes.',
+  ];
+
+  let messageIndex = 0;
+
+  const showMessage = () => {
+    typingIndicator.classList.add('is-visible');
+    incomingMessage.classList.remove('is-visible');
+
+    window.setTimeout(() => {
+      incomingText.textContent = messages[messageIndex];
+      typingIndicator.classList.remove('is-visible');
+      incomingMessage.classList.add('is-visible');
+      phoneMessages.scrollTop = phoneMessages.scrollHeight;
+      messageIndex = (messageIndex + 1) % messages.length;
+    }, 1500);
+
+    window.setTimeout(() => {
+      incomingMessage.classList.remove('is-visible');
+    }, 5200);
+  };
+
+  showMessage();
+  window.setInterval(showMessage, 6800);
+}
+
 const cursor = document.getElementById('cursor');
 const cursorFollower = document.getElementById('cursorFollower');
 let mouseX = 0;
@@ -1484,6 +1524,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   initNavContrailCanvas();
   initHeroFlightMap();
   initHeroTextAnimation();
+  initPhoneMessageSimulation();
   bindSignOutButtons();
   bindLoginForm();
   bindVentPosting();

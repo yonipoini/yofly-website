@@ -140,7 +140,7 @@
             </div>
             <!-- Chat preview -->
             <div class="phone-section-label">NYC Layover Chat</div>
-            <div class="phone-messages">
+            <div class="phone-messages" id="phoneMessages">
               <div class="phone-msg phone-msg-other">
                 <div class="msg-avatar">R</div>
                 <div class="msg-bubble">Dinner at The Hangar Bar? 15% crew discount!</div>
@@ -151,6 +151,18 @@
               <div class="phone-msg phone-msg-other">
                 <div class="msg-avatar">J</div>
                 <div class="msg-bubble">Just landed. Be there in 20!</div>
+              </div>
+              <div class="phone-msg phone-msg-other phone-msg-typing" id="phoneTypingIndicator" aria-hidden="true">
+                <div class="msg-avatar">A</div>
+                <div class="msg-bubble msg-bubble-typing">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+              <div class="phone-msg phone-msg-other phone-msg-incoming" id="phoneIncomingMessage" aria-live="polite">
+                <div class="msg-avatar">A</div>
+                <div class="msg-bubble" id="phoneIncomingText">Crew van is outside Terminal 5 now.</div>
               </div>
             </div>
           </div>
