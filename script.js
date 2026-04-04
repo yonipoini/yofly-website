@@ -23,7 +23,8 @@ const AUTH_REDIRECT_ORIGIN =
     ? PRODUCTION_ORIGIN
     : window.location.origin;
 const AUTH_REDIRECT_URL = `${AUTH_REDIRECT_ORIGIN}/profile`;
-const LOGIN_URL = `${window.location.origin}/login`;
+const LOGIN_URL = `${window.location.origin}/login.html`;
+const PROFILE_URL = `${window.location.origin}/profile.html`;
 
 const pageName = window.location.pathname.split('/').pop() || 'index';
 const normalizedPageName = pageName.replace(/\.html$/i, '').toLowerCase();
@@ -187,11 +188,6 @@ function renderNavAuth(session) {
         <a href="profile.html" class="btn btn-ghost">Dashboard</a>
         <button class="btn btn-primary" id="signOutBtn" type="button">Sign Out</button>
       `;
-    } else if (isProfilePage) {
-      navCta.innerHTML = `
-        <a href="login.html" class="btn btn-ghost">Sign In</a>
-        <a href="login.html" class="btn btn-primary">Get the App</a>
-      `;
     } else {
       navCta.innerHTML = `
         <a href="login.html" class="btn btn-ghost">Sign In</a>
@@ -203,11 +199,43 @@ function renderNavAuth(session) {
   bindSignOutButtons();
 }
 
+function renderSignedOutProfileState() {
+  if (!isProfilePage) return;
+
+  setText('profileHeroName', 'Session Ended');
+  setText(
+    'profileHeroSubtitle',
+    'You have been signed out. Redirecting you back to the sign-in screen now.'
+  );
+  setText('profileDisplayName', 'Redirecting to Sign In');
+  setText('profileMeta', 'Your crew dashboard is only available while signed in.');
+  setText('profileEmail', 'Signed out');
+  setText('profileStatusTitle', 'Signed out');
+  setText('profileStatusCopy', 'You need an active session to view your dashboard.');
+  setText('verificationDetailTitle', 'Sign in to view your dashboard');
+  setText('verificationDetailCopy', 'Once you sign back in, your crew profile and activity will load here.');
+  setText('opsChip', 'Signed out');
+  setText('mapChip', 'Signed out');
+  setText('intelChip', 'Signed out');
+  setHtml(
+    'recentPostsList',
+    '<div class="dashboard-empty">Redirecting to sign in...</div>'
+  );
+  setHtml(
+    'recentListingsList',
+    '<div class="dashboard-empty">Redirecting to sign in...</div>'
+  );
+}
+
 async function handleSignOut(button) {
   if (button) {
     button.disabled = true;
     button.textContent = 'Signing Out...';
   }
+
+  renderNavAuth(null);
+  updateGatedUi(null);
+  renderSignedOutProfileState();
 
   try {
     if (supabaseClient) {
@@ -648,8 +676,10 @@ async function syncCurrentSession() {
 
   if (!session?.user) {
     renderNavAuth(null);
+    updateGatedUi(null);
     if (isProfilePage) {
-      window.location.href = 'login.html';
+      renderSignedOutProfileState();
+      window.location.replace(LOGIN_URL);
     }
     return;
   }
@@ -659,7 +689,7 @@ async function syncCurrentSession() {
   updateGatedUi(profile);
 
   if (isLoginPage) {
-    window.location.replace('profile.html');
+    window.location.replace(PROFILE_URL);
     return;
   }
 
@@ -674,7 +704,7 @@ if (supabaseClient) {
       updateGatedUi(profile);
 
       if (isLoginPage) {
-        window.location.replace('profile.html');
+        window.location.replace(PROFILE_URL);
         return;
       }
 
@@ -683,8 +713,10 @@ if (supabaseClient) {
       }
     }
 
-    if (event === 'SIGNED_OUT' && isProfilePage) {
+    if (event === 'SIGNED_OUT') {
       renderNavAuth(null);
+      updateGatedUi(null);
+      renderSignedOutProfileState();
       window.location.replace(LOGIN_URL);
     }
   });
