@@ -1334,19 +1334,24 @@ function initHeroFlightMap() {
     context.stroke();
     context.setLineDash([]);
 
-    const traveler = (time * 0.00008 + (route.from + 1) * 0.13 + route.to * 0.05) % 1;
-    const t = traveler;
-    const inv = 1 - t;
-    const x = inv * inv * startX + 2 * inv * t * controlX + t * t * endX;
-    const y = inv * inv * startY + 2 * inv * t * controlY + t * t * endY;
+    const markerOffsets = [0, 0.28, 0.56];
+    markerOffsets.forEach((offset, index) => {
+      const traveler = (time * 0.00008 + (route.from + 1) * 0.13 + route.to * 0.05 + offset) % 1;
+      const t = traveler;
+      const inv = 1 - t;
+      const x = inv * inv * startX + 2 * inv * t * controlX + t * t * endX;
+      const y = inv * inv * startY + 2 * inv * t * controlY + t * t * endY;
+      const size = index === 0 ? 3.2 : 2.4;
+      const alpha = index === 0 ? 0.98 : 0.5 - index * 0.08;
 
-    context.beginPath();
-    context.arc(x, y, 3.1, 0, Math.PI * 2);
-    context.fillStyle = palette.traveler;
-    context.shadowBlur = 20;
-    context.shadowColor = palette.travelerShadow;
-    context.fill();
-    context.shadowBlur = 0;
+      context.beginPath();
+      context.arc(x, y, size, 0, Math.PI * 2);
+      context.fillStyle = palette.traveler.replace(/0\.98\)/, `${alpha})`);
+      context.shadowBlur = index === 0 ? 20 : 12;
+      context.shadowColor = palette.travelerShadow;
+      context.fill();
+      context.shadowBlur = 0;
+    });
   };
 
   const draw = (time) => {
