@@ -1094,16 +1094,35 @@ function initScrollPlane() {
     return;
   }
 
+  let lastScrollY = window.scrollY;
+
   const updatePlane = () => {
     const maxScroll = Math.max(
       document.documentElement.scrollHeight - window.innerHeight,
       1
     );
-    const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+    const currentScrollY = window.scrollY;
+    const progress = Math.min(Math.max(currentScrollY / maxScroll, 0), 1);
+    const isAtTop = progress <= 0.001;
+    const isAtBottom = progress >= 0.999;
+    const isScrollingUp = currentScrollY < lastScrollY;
+    const isScrollingDown = currentScrollY > lastScrollY;
 
     wrap.classList.toggle('visible', maxScroll > 200);
     fill.style.height = `${progress * 100}%`;
     icon.style.top = `${progress * 100}%`;
+
+    if (isAtTop) {
+      icon.classList.remove('is-up');
+    } else if (isAtBottom) {
+      icon.classList.add('is-up');
+    } else if (isScrollingUp) {
+      icon.classList.add('is-up');
+    } else if (isScrollingDown) {
+      icon.classList.remove('is-up');
+    }
+
+    lastScrollY = currentScrollY;
   };
 
   updatePlane();

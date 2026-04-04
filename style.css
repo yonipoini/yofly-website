@@ -1306,9 +1306,13 @@ body:hover .cursor-follower { opacity: 0.5; }
   justify-content: center;
   color: var(--accent);
   filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.9));
-  transition: top 0.12s linear;
-  will-change: top;
+  transition: top 0.12s linear, transform 0.26s ease;
+  will-change: top, transform;
   animation: planePulse 2s ease-in-out infinite;
+}
+
+.scroll-plane-icon.is-up {
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 @keyframes planePulse {
