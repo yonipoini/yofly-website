@@ -59,6 +59,7 @@ const profileDefaults = {
 let currentDashboardProfile = null;
 let currentDashboardSnapshot = null;
 let currentDashboardUser = null;
+let sessionSyncCounter = 0;
 
 const escapeHtml = (value) =>
   String(value || '')
@@ -290,7 +291,7 @@ function renderNavAuth(session) {
     if (session?.user) {
       navCta.innerHTML = `
         <a href="profile.html" class="btn btn-ghost">Dashboard</a>
-        <button class="btn btn-primary" id="signOutBtn" type="button">Sign Out</button>
+        <button class="btn btn-primary" data-signout-trigger="true" type="button">Sign Out</button>
       `;
     } else {
       navCta.innerHTML = `
@@ -320,6 +321,7 @@ function renderSignedOutProfileState() {
   setText('sidebarUserName', 'Signed out');
   setText('sidebarUserMeta', 'Sign in again to reopen your member console.');
   setText('sidebarVerificationPill', 'Signed out');
+  setText('headerUserName', 'Signed out');
   setText('profileEmail', 'Signed out');
   setText('profileStatusTitle', 'Signed out');
   setText('profileStatusCopy', 'You need an active session to view your dashboard.');
@@ -348,6 +350,20 @@ function renderSignedOutProfileState() {
   if (sidebarVerificationPill) {
     sidebarVerificationPill.dataset.tone = 'muted';
   }
+  [
+    ['sidebarAvatarImage', 'sidebarAvatarFallback'],
+    ['headerAvatarImage', 'headerAvatarFallback'],
+    ['profileAvatarImage', 'profileAvatarFallback'],
+  ].forEach(([imageId, fallbackId]) => {
+    const image = document.getElementById(imageId);
+    const fallback = document.getElementById(fallbackId);
+    if (image && fallback) {
+      image.removeAttribute('src');
+      image.style.display = 'none';
+      fallback.style.display = 'inline';
+      fallback.textContent = 'YC';
+    }
+  });
   setHtml(
     'recentPostsList',
     '<div class="dashboard-empty">Redirecting to sign in...</div>'
@@ -380,7 +396,7 @@ async function handleSignOut(button) {
 }
 
 function bindSignOutButtons() {
-  document.querySelectorAll('#signOutBtn').forEach((button) => {
+  document.querySelectorAll('[data-signout-trigger="true"]').forEach((button) => {
     if (button.dataset.bound === 'true') {
       return;
     }
@@ -517,25 +533,32 @@ function renderDashboardProfile(profile, user) {
   const roleLabel = getRoleLabel(mergedProfile.role);
   const airlineLabel = mergedProfile.airline || 'YoFly Crew';
   const profileMeta = [airlineLabel, roleLabel, `${mergedProfile.base_airport || 'JFK'} base`].join(' • ');
-  const avatarImage = document.getElementById('profileAvatarImage');
-  const avatarFallback = document.getElementById('profileAvatarFallback');
   const accountStatus = mergedProfile.verified_marketplace
     ? 'Crew verified with marketplace access'
     : verificationLabel;
+  const avatarUrl = String(mergedProfile.avatar_url || '').trim();
+  const initials = getInitials(mergedProfile.full_name || user.email || 'YoFly Crew');
 
-  if (avatarImage && avatarFallback) {
-    const avatarUrl = String(mergedProfile.avatar_url || '').trim();
+  [
+    ['profileAvatarImage', 'profileAvatarFallback'],
+    ['sidebarAvatarImage', 'sidebarAvatarFallback'],
+    ['headerAvatarImage', 'headerAvatarFallback'],
+  ].forEach(([imageId, fallbackId]) => {
+    const image = document.getElementById(imageId);
+    const fallback = document.getElementById(fallbackId);
+    if (!image || !fallback) return;
+
     if (avatarUrl) {
-      avatarImage.src = avatarUrl;
-      avatarImage.style.display = 'block';
-      avatarFallback.style.display = 'none';
+      image.src = avatarUrl;
+      image.style.display = 'block';
+      fallback.style.display = 'none';
     } else {
-      avatarImage.removeAttribute('src');
-      avatarImage.style.display = 'none';
-      avatarFallback.style.display = 'inline';
-      avatarFallback.textContent = getInitials(mergedProfile.full_name || user.email || 'YoFly Crew');
+      image.removeAttribute('src');
+      image.style.display = 'none';
+      fallback.style.display = 'inline';
+      fallback.textContent = initials;
     }
-  }
+  });
 
   setText('profileHeroName', heroName);
   setText(
@@ -556,6 +579,7 @@ function renderDashboardProfile(profile, user) {
   setText('verificationDetailCopy', verificationDetail.copy);
   setText('sidebarUserName', heroName);
   setText('sidebarUserMeta', `${roleLabel} • ${mergedProfile.base_airport || 'JFK'} base`);
+  setText('headerUserName', heroName);
   setText(
     'sessionPersistenceNote',
     `Signed in as ${user.email || 'your account'}. This dashboard stays active on this browser until you choose Sign Out.`
@@ -871,31 +895,64 @@ function bindLoginForm() {
 
 async function syncCurrentSession() {
   if (!supabaseClient) return;
+  const syncId = ++sessionSyncCounter;
 
-  const {
-    data: { session },
-  } = await supabaseClient.auth.getSession();
+  try {
+    const {
+      data: { session },
+    } = await supabaseClient.auth.getSession();
 
-  if (!session?.user) {
+    let resolvedSession = session;
+
+    if (!resolvedSession?.user) {
+      const {
+        data: { user },
+      } = await supabaseClient.auth.getUser();
+
+      if (user) {
+        resolvedSession = { user };
+      }
+    }
+
+    if (syncId !== sessionSyncCounter) {
+      return;
+    }
+
+    if (!resolvedSession?.user) {
+      renderNavAuth(null);
+      updateGatedUi(null);
+      if (isProfilePage) {
+        renderSignedOutProfileState();
+        window.location.replace(LOGIN_URL);
+      }
+      return;
+    }
+
+    renderNavAuth(resolvedSession);
+
+    if (isLoginPage) {
+      window.location.replace(PROFILE_URL);
+      return;
+    }
+
+    const profile = await ensureSharedProfile(resolvedSession.user);
+
+    if (syncId !== sessionSyncCounter) {
+      return;
+    }
+
+    updateGatedUi(profile);
+    await initProfilePage(resolvedSession.user);
+  } catch (error) {
+    console.error('Session sync failed:', error);
     renderNavAuth(null);
     updateGatedUi(null);
+
     if (isProfilePage) {
       renderSignedOutProfileState();
       window.location.replace(LOGIN_URL);
     }
-    return;
   }
-
-  renderNavAuth(session);
-  const profile = await ensureSharedProfile(session.user);
-  updateGatedUi(profile);
-
-  if (isLoginPage) {
-    window.location.replace(PROFILE_URL);
-    return;
-  }
-
-  await initProfilePage(session.user);
 }
 
 if (supabaseClient) {
@@ -1433,4 +1490,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   await syncCurrentSession();
   await fetchVents();
   await fetchListings();
+});
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted || isProfilePage || isLoginPage) {
+    void syncCurrentSession();
+  }
 });

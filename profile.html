@@ -31,6 +31,10 @@
       </a>
 
       <div class="dashboard-rail-profile">
+        <div class="dashboard-sidebar-avatar">
+          <img id="sidebarAvatarImage" class="dashboard-sidebar-avatar-image" alt="Profile avatar" />
+          <span id="sidebarAvatarFallback">YC</span>
+        </div>
         <div class="section-badge" id="sidebarVerificationPill" data-tone="muted">Checking access</div>
         <h2 id="sidebarUserName">Checking session...</h2>
         <p id="sidebarUserMeta">Loading your crew workspace and account data.</p>
@@ -55,7 +59,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary dashboard-signout-btn" id="signOutBtn" type="button">Sign Out</button>
+      <button class="btn btn-primary dashboard-signout-btn" data-signout-trigger="true" type="button">Sign Out</button>
     </aside>
 
     <main class="dashboard-workspace">
@@ -65,10 +69,23 @@
           <h1 class="dashboard-workspace-title"><span id="profileHeroName">Checking session...</span> <span class="gradient-text">Dashboard</span></h1>
           <p class="dashboard-workspace-copy" id="profileHeroSubtitle">Confirming your crew access before loading your account workspace.</p>
         </div>
-        <div class="dashboard-topbar-actions">
-          <a href="community.html" class="btn btn-ghost">Community</a>
-          <a href="marketplace.html" class="btn btn-ghost">Marketplace</a>
-          <a href="alerts.html" class="btn btn-primary">Alerts & Ops</a>
+        <div class="dashboard-topbar-right">
+          <div class="dashboard-topbar-actions">
+            <a href="community.html" class="btn btn-ghost">Community</a>
+            <a href="marketplace.html" class="btn btn-ghost">Marketplace</a>
+            <a href="alerts.html" class="btn btn-primary">Alerts & Ops</a>
+          </div>
+          <div class="dashboard-topbar-usercard">
+            <div class="dashboard-topbar-avatar">
+              <img id="headerAvatarImage" class="dashboard-topbar-avatar-image" alt="Profile avatar" />
+              <span id="headerAvatarFallback">YC</span>
+            </div>
+            <div class="dashboard-topbar-usercopy">
+              <div class="dashboard-topbar-label">Signed In As</div>
+              <div class="dashboard-topbar-name" id="headerUserName">Checking session...</div>
+            </div>
+            <button class="btn btn-primary dashboard-topbar-signout" data-signout-trigger="true" type="button">Sign Out</button>
+          </div>
         </div>
       </header>
 
