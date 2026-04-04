@@ -1276,12 +1276,17 @@ function initHeroFlightMap() {
     { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
     { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
     { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
-    { key: 'ATL', x: 0.53, y: 0.10, labelDx: 0, labelDy: -14, align: 'center', tone: 'cyan' },
+    { key: 'ATL', x: 0.46, y: 0.28, labelDx: 0, labelDy: -14, align: 'center', tone: 'cyan', showLabel: false, scale: 0.9 },
     { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
     { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
     { key: 'DXB', x: 0.91, y: 0.32, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
     { key: 'HND', x: 0.94, y: 0.56, labelDx: -14, labelDy: -12, align: 'right', tone: 'cyan' },
     { key: 'SIN', x: 0.84, y: 0.82, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
+    { key: 'SEA', x: 0.10, y: 0.33, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.72 },
+    { key: 'LAS', x: 0.24, y: 0.43, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.7 },
+    { key: 'DEN', x: 0.34, y: 0.58, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.74 },
+    { key: 'MIA', x: 0.18, y: 0.70, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple', showLabel: false, scale: 0.68 },
+    { key: 'BOS', x: 0.44, y: 0.71, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan', showLabel: false, scale: 0.7 },
   ];
   const routes = [
     { from: 0, to: 1, tone: 'cyan', markers: 3, spacing: 0.3, speed: 1 },
@@ -1370,8 +1375,10 @@ function initHeroFlightMap() {
       const x = hub.x * width;
       const y = hub.y * height;
       const pulse = 0.55 + Math.sin(time * 0.002 + index) * 0.35;
-      const ringRadius = 7 + pulse * 7;
-      const outerRadius = ringRadius + 9;
+      const hubScale = hub.scale || 1;
+      const ringRadius = (7 + pulse * 7) * hubScale;
+      const outerRadius = ringRadius + 9 * hubScale;
+      const coreRadius = 3.2 * Math.max(0.85, hubScale);
       const shimmer = 0.45 + Math.sin(time * 0.0026 + index * 1.2) * 0.3;
 
       context.beginPath();
@@ -1386,14 +1393,14 @@ function initHeroFlightMap() {
       context.stroke();
 
       context.beginPath();
-      context.arc(x, y, 3.2, 0, Math.PI * 2);
+      context.arc(x, y, coreRadius, 0, Math.PI * 2);
       context.fillStyle = palette.core;
-      context.shadowBlur = 16;
+      context.shadowBlur = 16 * Math.max(0.7, hubScale);
       context.shadowColor = palette.coreShadow;
       context.fill();
       context.shadowBlur = 0;
 
-      if (showLabels) {
+      if (showLabels && hub.showLabel !== false) {
         context.textAlign = hub.align || 'left';
         context.textBaseline = 'middle';
         context.fillStyle = palette.label;
