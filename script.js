@@ -1028,6 +1028,300 @@ function bindVentPosting() {
   });
 }
 
+function initScrollPlane() {
+  const wrap = document.getElementById('scrollPlaneWrap');
+  const fill = document.getElementById('scrollPlaneFill');
+  const icon = document.getElementById('scrollPlaneIcon');
+
+  if (!wrap || !fill || !icon) {
+    return;
+  }
+
+  const updatePlane = () => {
+    const maxScroll = Math.max(
+      document.documentElement.scrollHeight - window.innerHeight,
+      1
+    );
+    const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+
+    wrap.classList.toggle('visible', maxScroll > 200);
+    fill.style.height = `${progress * 100}%`;
+    icon.style.top = `${progress * 100}%`;
+  };
+
+  updatePlane();
+  window.addEventListener('scroll', updatePlane, { passive: true });
+  window.addEventListener('resize', updatePlane);
+}
+
+function initNavContrailCanvas() {
+  const navCanvas = document.getElementById('navCanvas');
+  const nav = document.getElementById('nav');
+
+  if (!(navCanvas instanceof HTMLCanvasElement) || !nav) {
+    return;
+  }
+
+  const context = navCanvas.getContext('2d');
+  if (!context) {
+    return;
+  }
+
+  const hubs = [
+    { x: 0.08, y: 0.62, pulseOffset: 0 },
+    { x: 0.22, y: 0.28, pulseOffset: 0.7 },
+    { x: 0.42, y: 0.58, pulseOffset: 1.2 },
+    { x: 0.63, y: 0.34, pulseOffset: 2.1 },
+    { x: 0.82, y: 0.56, pulseOffset: 2.7 },
+  ];
+  const links = [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [0, 2],
+    [1, 3],
+    [2, 4],
+  ];
+
+  let width = 0;
+  let height = 0;
+  let rafId = 0;
+
+  const resize = () => {
+    const rect = navCanvas.getBoundingClientRect();
+    const ratio = window.devicePixelRatio || 1;
+    width = rect.width;
+    height = rect.height;
+    navCanvas.width = Math.round(width * ratio);
+    navCanvas.height = Math.round(height * ratio);
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  };
+
+  const drawLink = (from, to, time) => {
+    const start = hubs[from];
+    const end = hubs[to];
+    const startX = start.x * width;
+    const startY = start.y * height;
+    const endX = end.x * width;
+    const endY = end.y * height;
+    const controlX = (startX + endX) / 2;
+    const controlY = Math.min(startY, endY) - 18;
+
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.quadraticCurveTo(controlX, controlY, endX, endY);
+    context.strokeStyle = 'rgba(255,255,255,0.08)';
+    context.lineWidth = 1;
+    context.stroke();
+
+    const traveler = (time * 0.00012 + (from + to) * 0.11) % 1;
+    const t = traveler;
+    const inv = 1 - t;
+    const pulseX = inv * inv * startX + 2 * inv * t * controlX + t * t * endX;
+    const pulseY = inv * inv * startY + 2 * inv * t * controlY + t * t * endY;
+
+    context.beginPath();
+    context.arc(pulseX, pulseY, 2.4, 0, Math.PI * 2);
+    context.fillStyle = 'rgba(0,255,255,0.9)';
+    context.shadowBlur = 14;
+    context.shadowColor = 'rgba(0,255,255,0.8)';
+    context.fill();
+    context.shadowBlur = 0;
+  };
+
+  const draw = (time) => {
+    context.clearRect(0, 0, width, height);
+
+    links.forEach(([from, to]) => drawLink(from, to, time));
+
+    hubs.forEach((hub) => {
+      const x = hub.x * width;
+      const y = hub.y * height;
+      const pulse = 0.65 + Math.sin(time * 0.003 + hub.pulseOffset) * 0.25;
+
+      context.beginPath();
+      context.arc(x, y, 2.5 + pulse * 2.2, 0, Math.PI * 2);
+      context.fillStyle = `rgba(255, 0, 255, ${0.18 + pulse * 0.18})`;
+      context.fill();
+
+      context.beginPath();
+      context.arc(x, y, 2.2, 0, Math.PI * 2);
+      context.fillStyle = 'rgba(255,255,255,0.88)';
+      context.fill();
+    });
+
+    rafId = requestAnimationFrame(draw);
+  };
+
+  resize();
+  draw(0);
+  window.addEventListener('resize', resize);
+  window.addEventListener('beforeunload', () => cancelAnimationFrame(rafId), { once: true });
+}
+
+function initHeroFlightMap() {
+  const flightCanvas = document.getElementById('flightCanvas');
+  const hero = document.getElementById('hero');
+
+  if (!(flightCanvas instanceof HTMLCanvasElement) || !hero) {
+    return;
+  }
+
+  const context = flightCanvas.getContext('2d');
+  if (!context) {
+    return;
+  }
+
+  const hubs = [
+    { key: 'LAX', x: 0.13, y: 0.63, color: '0,255,255' },
+    { key: 'DFW', x: 0.31, y: 0.55, color: '255,0,255' },
+    { key: 'ATL', x: 0.47, y: 0.59, color: '0,255,255' },
+    { key: 'JFK', x: 0.69, y: 0.36, color: '255,255,255' },
+    { key: 'LHR', x: 0.88, y: 0.32, color: '0,255,255' },
+  ];
+  const routes = [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [0, 2],
+    [1, 3],
+    [2, 4],
+  ];
+
+  let width = 0;
+  let height = 0;
+  let rafId = 0;
+
+  const resize = () => {
+    const rect = hero.getBoundingClientRect();
+    const ratio = window.devicePixelRatio || 1;
+    width = rect.width;
+    height = rect.height;
+    flightCanvas.width = Math.round(width * ratio);
+    flightCanvas.height = Math.round(height * ratio);
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  };
+
+  const drawRoute = (from, to, time) => {
+    const start = hubs[from];
+    const end = hubs[to];
+    const startX = start.x * width;
+    const startY = start.y * height;
+    const endX = end.x * width;
+    const endY = end.y * height;
+    const arcHeight = Math.max(36, Math.abs(endX - startX) * 0.08);
+    const controlX = (startX + endX) / 2;
+    const controlY = Math.min(startY, endY) - arcHeight;
+
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.quadraticCurveTo(controlX, controlY, endX, endY);
+    context.strokeStyle = 'rgba(255,255,255,0.08)';
+    context.lineWidth = 1;
+    context.setLineDash([7, 9]);
+    context.stroke();
+    context.setLineDash([]);
+
+    const traveler = (time * 0.00008 + (from + 1) * 0.13 + to * 0.05) % 1;
+    const t = traveler;
+    const inv = 1 - t;
+    const x = inv * inv * startX + 2 * inv * t * controlX + t * t * endX;
+    const y = inv * inv * startY + 2 * inv * t * controlY + t * t * endY;
+
+    context.beginPath();
+    context.arc(x, y, 2.8, 0, Math.PI * 2);
+    context.fillStyle = 'rgba(0,255,255,0.95)';
+    context.shadowBlur = 18;
+    context.shadowColor = 'rgba(0,255,255,0.8)';
+    context.fill();
+    context.shadowBlur = 0;
+  };
+
+  const draw = (time) => {
+    context.clearRect(0, 0, width, height);
+
+    routes.forEach(([from, to]) => drawRoute(from, to, time));
+
+    hubs.forEach((hub, index) => {
+      const x = hub.x * width;
+      const y = hub.y * height;
+      const pulse = 0.55 + Math.sin(time * 0.002 + index) * 0.35;
+
+      context.beginPath();
+      context.arc(x, y, 6 + pulse * 4, 0, Math.PI * 2);
+      context.fillStyle = `rgba(${hub.color}, ${0.08 + pulse * 0.12})`;
+      context.fill();
+
+      context.beginPath();
+      context.arc(x, y, 2.4, 0, Math.PI * 2);
+      context.fillStyle = `rgba(${hub.color}, 0.95)`;
+      context.fill();
+
+      context.fillStyle = 'rgba(255,255,255,0.55)';
+      context.font = '11px Inter, sans-serif';
+      context.fillText(hub.key, x + 10, y - 8);
+    });
+
+    rafId = requestAnimationFrame(draw);
+  };
+
+  resize();
+  draw(0);
+  window.addEventListener('resize', resize);
+  window.addEventListener('beforeunload', () => cancelAnimationFrame(rafId), { once: true });
+}
+
+function initHeroTextAnimation() {
+  const heroTitle = document.querySelector('.hero-title');
+  const heroSubtitle = document.querySelector('.hero-subtitle');
+  const heroBadge = document.querySelector('.hero-badge');
+  const heroLaunchNote = document.querySelector('.hero-launch-note');
+  const gradientText = heroTitle?.querySelector('.gradient-text');
+
+  if (!heroTitle || !heroSubtitle || !heroBadge || !heroLaunchNote) {
+    return;
+  }
+
+  const pulseElements = [
+    { element: heroBadge, baseY: 0, amount: 4, speed: 0.0018 },
+    { element: heroTitle, baseY: 0, amount: 6, speed: 0.0013 },
+    { element: heroSubtitle, baseY: 0, amount: 5, speed: 0.0011 },
+    { element: heroLaunchNote, baseY: 0, amount: 4, speed: 0.0016 },
+  ];
+
+  let rafId = 0;
+  let startTimeoutId = 0;
+
+  const animate = (time) => {
+    pulseElements.forEach(({ element, baseY, amount, speed }, index) => {
+      const offset = Math.sin(time * speed + index * 0.6) * amount;
+      element.style.transform = `translateY(${baseY + offset}px)`;
+    });
+
+    if (gradientText) {
+      const hue = 180 + Math.sin(time * 0.0012) * 28;
+      gradientText.style.filter = `drop-shadow(0 0 14px hsla(${hue}, 100%, 70%, 0.18))`;
+    }
+
+    rafId = requestAnimationFrame(animate);
+  };
+
+  startTimeoutId = window.setTimeout(() => {
+    animate(0);
+  }, 1400);
+
+  window.addEventListener(
+    'beforeunload',
+    () => {
+      cancelAnimationFrame(rafId);
+      window.clearTimeout(startTimeoutId);
+    },
+    { once: true }
+  );
+}
+
 const cursor = document.getElementById('cursor');
 const cursorFollower = document.getElementById('cursorFollower');
 let mouseX = 0;
@@ -1129,6 +1423,10 @@ if (nav) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+  initScrollPlane();
+  initNavContrailCanvas();
+  initHeroFlightMap();
+  initHeroTextAnimation();
   bindSignOutButtons();
   bindLoginForm();
   bindVentPosting();
