@@ -1272,11 +1272,11 @@ function initHeroFlightMap() {
     },
   };
   const hubs = [
-    { key: 'LAX', x: 0.08, y: 0.22, labelDx: 10, labelDy: -12, align: 'left', tone: 'cyan' },
+    { key: 'LAX', x: 0.04, y: 0.18, labelDx: 14, labelDy: -10, align: 'left', tone: 'cyan' },
     { key: 'SFO', x: 0.16, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
     { key: 'ORD', x: 0.28, y: 0.11, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
     { key: 'DFW', x: 0.40, y: 0.14, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
-    { key: 'ATL', x: 0.52, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
+    { key: 'ATL', x: 0.53, y: 0.10, labelDx: 0, labelDy: -14, align: 'center', tone: 'cyan' },
     { key: 'JFK', x: 0.63, y: 0.12, labelDx: 0, labelDy: -12, align: 'center', tone: 'purple' },
     { key: 'LHR', x: 0.78, y: 0.18, labelDx: 0, labelDy: -12, align: 'center', tone: 'cyan' },
     { key: 'DXB', x: 0.91, y: 0.32, labelDx: -14, labelDy: -12, align: 'right', tone: 'purple' },
