@@ -85,8 +85,10 @@
       border-radius: 14px;
       font-weight: 800;
       font-size: 16px;
+      cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
       box-shadow: 0 8px 24px rgba(0, 230, 118, 0.3);
+      border: none;
     }
     .status-button:hover {
       transform: translateY(-2px);
@@ -96,6 +98,11 @@
       background: linear-gradient(135deg, #ff3b30, #ff9500);
       color: #ffffff;
       box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3);
+    }
+    .fallback-note {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 16px;
     }
   </style>
 </head>
@@ -119,9 +126,10 @@
         <h1 class="status-title">Account Verified</h1>
         <p class="status-desc">
           Your YoFly Crew account has been successfully verified! You are now recognized as a verified crew member. 
-          You can now close this window and log in directly inside the mobile app.
+          Tap below to open the mobile app and log in.
         </p>
-        <a href="yoflycrew://auth" class="status-button">Open YoFly Crew App</a>
+        <a href="yoflycrew://auth" onclick="openApp(event)" class="status-button">Open YoFly Crew App</a>
+        <p class="fallback-note">If the app doesn't open automatically, return to your home screen and open YoFly Crew.</p>
       </div>
 
       <!-- Error State (Hidden by default) -->
@@ -144,6 +152,11 @@
   </footer>
 
   <script>
+    function openApp(event) {
+      // Direct deep link trigger
+      window.location.href = 'yoflycrew://auth';
+    }
+
     // Parse Hash Parameters from Supabase redirect
     const hash = window.location.hash || '';
     const params = new URLSearchParams(hash.replace('#', '?'));
