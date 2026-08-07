@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Verified — YoFly Crew</title>
+  <link rel="icon" href="logo_cropped.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .status-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .status-card {
+      background: var(--surface-2, rgba(255, 255, 255, 0.03));
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    .status-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+    .status-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+    .status-desc {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+      opacity: 0.8;
+      color: #ccc;
+    }
+    .status-button {
+      display: inline-block;
+      padding: 14px 28px;
+      background: var(--grad-accent, linear-gradient(135deg, #00bcd4, #00e676));
+      color: #050505;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .status-button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+    .status-button.error {
+      background: #ff3b30;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav scrolled" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" style="height: 40px;" />
+      </a>
+    </div>
+  </nav>
+
+  <!-- ============ STATUS CONTENT ============ -->
+  <main class="status-container">
+    <div class="status-card" id="statusCard">
+      <!-- Success State by Default -->
+      <div id="successState">
+        <div class="status-icon">✈️</div>
+        <h1 class="status-title">Account Verified</h1>
+        <p class="status-desc">
+          Your YoFly Crew account has been successfully verified! You are now recognized as a verified crew member. 
+          You can now close this window and log in directly inside the mobile app.
+        </p>
+        <a href="yoflycrew://auth" class="status-button">Open YoFly Crew App</a>
+      </div>
+
+      <!-- Error State (Hidden by default) -->
+      <div id="errorState" style="display: none;">
+        <div class="status-icon">⚠️</div>
+        <h1 class="status-title" style="color: #ff3b30;" id="errorTitle">Verification Error</h1>
+        <p class="status-desc" id="errorDescription">
+          This verification link is invalid or has expired. Please request a new confirmation email from the app.
+        </p>
+        <a href="index.html" class="status-button error">Go to Homepage</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" style="margin-top: auto;">
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Parse Hash Parameters from Supabase redirect
+    const hash = window.location.hash || '';
+    const params = new URLSearchParams(hash.replace('#', '?'));
+    
+    const error = params.get('error') || params.get('error_description');
+    const errorCode = params.get('error_code');
+    
+    if (error) {
+      document.getElementById('successState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      
+      const errorDescEl = document.getElementById('errorDescription');
+      if (errorCode === 'otp_expired') {
+        document.getElementById('errorTitle').innerText = 'Link Expired';
+        errorDescEl.innerText = 'This verification link has already been used or has expired. Please open the YoFly app on your phone and request a new confirmation email.';
+      } else {
+        errorDescEl.innerText = decodeURIComponent(error.replace(/\+/g, ' '));
+      }
+    }
+  </script>
+</body>
+</html>
