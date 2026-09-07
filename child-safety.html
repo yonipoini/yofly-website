@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Child Safety Standards — YoFly Crew</title>
+  <meta name="description" content="YoFly Crew Child Safety Standards and Zero Tolerance Policy regarding Child Sexual Abuse and Exploitation (CSAE)." />
+  <link rel="icon" href="logo_cropped.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav scrolled" id="nav">
+    <canvas class="nav-canvas" id="navCanvas"></canvas>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="features.html">Features</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="alerts.html">Alerts</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="login.html" class="btn btn-ghost">Sign In</a>
+        <a href="login.html" class="btn btn-primary">Get the App</a>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+      <li><a href="community.html" class="mobile-nav-link">Community</a></li>
+      <li><a href="marketplace.html" class="mobile-nav-link">Marketplace</a></li>
+      <li><a href="alerts.html" class="mobile-nav-link">Alerts</a></li>
+      <li><a href="login.html" class="mobile-nav-link btn btn-primary">Get the App</a></li>
+    </ul>
+  </div>
+
+  <!-- ============ SUBPAGE HERO ============ -->
+  <section class="subpage-hero">
+    <div class="hero-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="reveal-up">
+      <div class="section-badge">Compliance & Safety</div>
+      <h1 class="hero-title">Child Safety <span class="gradient-text">Standards</span></h1>
+      <p class="hero-subtitle">YoFly Crew zero-tolerance commitment against Child Sexual Abuse and Exploitation (CSAE).</p>
+    </div>
+  </section>
+
+  <!-- ============ PAGE CONTENT ============ -->
+  <main class="page-content">
+    <div class="reveal-up">
+      <h2>1. Zero Tolerance Policy on Child Sexual Abuse and Exploitation (CSAE)</h2>
+      <p><strong>YoFly Crew</strong> (developed and published by <strong>YOFLY CREW LLC</strong>) enforces a strict, absolute zero-tolerance policy regarding Child Sexual Abuse Material (CSAM) and Child Sexual Abuse and Exploitation (CSAE). We are uncompromisingly dedicated to maintaining a safe, professional digital ecosystem.</p>
+      
+      <h2>2. Prohibited Content and Behaviors</h2>
+      <p>Any and all forms of child sexual exploitation and abuse are strictly prohibited on YoFly Crew across all application features, including direct messages, public feeds, community forums, crew marketplace listings, crashpad posts, profile pictures, and voice dictation channels. Prohibited actions include, without limitation:</p>
+      <ul>
+        <li>Uploading, creating, storing, sharing, transmitting, or facilitating access to Child Sexual Abuse Material (CSAM) or any visual/written depictions of child sexual abuse.</li>
+        <li>Child grooming, predatory solicitation, sexual harassment, or attempting to communicate with minors for sexual or inappropriate purposes.</li>
+        <li>Child trafficking, sexual exploitation, or endangerment of any kind.</li>
+        <li>Using sexually suggestive, explicit, or inappropriate language or media concerning minors.</li>
+      </ul>
+
+      <h2>3. Active Moderation, Prevention & Account Enforcement</h2>
+      <p>YoFly Crew is designed as a verified network strictly for credentialed airline personnel and aviation professionals. To ensure total platform safety:</p>
+      <ul>
+        <li><strong>Verification Controls:</strong> All registered members undergo employment verification and moderation checks.</li>
+        <li><strong>Automated & Human Moderation:</strong> We employ automated content filters and 24/7 human moderation review to flag and intercept illicit content or suspicious activity.</li>
+        <li><strong>Instant Account Termination:</strong> Any user found attempting to distribute CSAM or engage in CSAE will face immediate, permanent account termination and IP/device banning.</li>
+      </ul>
+
+      <h2>4. Reporting In-App Violations</h2>
+      <p>Users can report any concerning content, message, or profile directly within the YoFly Crew application:</p>
+      <ul>
+        <li>Tap the <strong>Report</strong> or <strong>Flag</strong> icon on any chat message, community post, or marketplace listing.</li>
+        <li>Select <strong>Child Safety Violation</strong> or <strong>Inappropriate Content</strong>.</li>
+        <li>Our Safety & Trust Team reviews prioritized safety reports immediately.</li>
+      </ul>
+
+      <h2>5. Escalation to Law Enforcement & NCMEC</h2>
+      <p>In full compliance with federal and international child protection laws, YoFly Crew cooperates fully with global law enforcement agencies. When potential Child Sexual Abuse Material (CSAM) or CSAE is identified:</p>
+      <ul>
+        <li>We immediately remove and preserve all relevant digital forensic records.</li>
+        <li>We file a formal report with the <strong>National Center for Missing & Exploited Children (NCMEC)</strong> via the CyberTipline.</li>
+        <li>We refer critical safety threats to competent local, federal, and international law enforcement agencies.</li>
+      </ul>
+
+      <h2>6. Designated Child Safety Contact & Inquiries</h2>
+      <p>If you have urgent child safety concerns, questions regarding our standards, or need to reach our designated Child Safety Team, please contact us immediately:</p>
+      <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <p style="margin: 0 0 8px 0;"><strong>Designated Safety Entity:</strong> YOFLY CREW LLC — Child Safety & Compliance Team</p>
+        <p style="margin: 0 0 8px 0;"><strong>Responsible Contact Person:</strong> Yoniel Arvelo (Lead Developer & Operations Director)</p>
+        <p style="margin: 0 0 8px 0;"><strong>Dedicated Safety Email:</strong> <a href="mailto:safety@yoflycrew.com" style="color: #00E5FF;">safety@yoflycrew.com</a></p>
+        <p style="margin: 0 0 8px 0;"><strong>General Administration Email:</strong> <a href="mailto:admin@yoflycrew.com" style="color: #00E5FF;">admin@yoflycrew.com</a></p>
+        <p style="margin: 0;"><strong>Website:</strong> <a href="https://yoflycrew.com" style="color: #00E5FF;">https://yoflycrew.com</a></p>
+      </div>
+      <p>Reports submitted to <a href="mailto:safety@yoflycrew.com">safety@yoflycrew.com</a> are treated with maximum priority and investigated without delay.</p>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="footer-logo" />
+        <div class="footer-brand-text">
+          <div class="footer-tagline">Built for pilots &amp; flight attendants.</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Product</div>
+          <a href="features.html">Features</a>
+          <a href="community.html">Community</a>
+          <a href="marketplace.html">Marketplace</a>
+          <a href="alerts.html">Alerts</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <a href="about.html">About Us</a>
+          <a href="support.html">Support</a>
+          <a href="careers.html">Careers</a>
+          <a href="press.html">Press</a>
+          <a href="investors.html">Investors</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="child-safety.html">Child Safety Standards</a>
+          <a href="cookies.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
