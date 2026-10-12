@@ -4,9 +4,9 @@
    dashboard data, particles, and motion.
    ============================================================ */
 
-const SUPABASE_URL = 'https://ttjbpmdivtbaagkyszmb.supabase.co';
+const SUPABASE_URL = 'https://ylmctmaedrcrmhjzymfi.supabase.co';
 const SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0amJwbWRpdnRiYWFna3lzem1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNTE3MjUsImV4cCI6MjA5MDgyNzcyNX0.Pi6ZyX8nXqMh5rpOX6Dyrsz3y0Vq-Y5eDzoqihVIemc';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsbWN0bWFlZHJjcm1oanp5bWZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxOTY2MDEsImV4cCI6MjA4OTc3MjYwMX0.ZRiq7ikdr4AtxKUHmfg8DPO1mYQKw5MQ0Ww_n2Oh-MQ';
 const supabaseClient =
   window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {

@@ -149,10 +149,38 @@
       color: #fff;
       margin-bottom: 6px;
     }
-    .step-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.5;
+    .testflight-instant-box {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.08), rgba(255, 0, 255, 0.08));
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      text-align: center;
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .testflight-btn-large {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--grad-full);
+      color: #000;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 16px 32px;
+      border-radius: 14px;
+      margin-top: 14px;
+      box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .testflight-btn-large:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(255, 0, 255, 0.4);
     }
   </style>
 </head>
@@ -247,15 +275,36 @@
               autocomplete="email"
             />
             <button type="submit" id="submitBtn" class="btn btn-primary" style="white-space: nowrap; padding: 16px 28px; font-weight: 600;">
-              Send TestFlight Invite ✈️
+              Get TestFlight Link ✈️
             </button>
           </div>
           <div id="statusMessage" class="status-alert-box"></div>
+          <div id="instantAccessBox" style="display: none;" class="testflight-instant-box">
+            <div style="font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 8px;">
+              🎉 You're on the list! Here is your TestFlight invite:
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 14px;">
+              Click below to immediately open Apple TestFlight and install YoFly Crew on your iPhone or iPad:
+            </p>
+            <a href="https://testflight.apple.com/join/NeEjDwf3" id="directTestflightLink" target="_blank" rel="noopener noreferrer" class="testflight-btn-large">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-1.19.74-1.97 1.94-1.95 3.37.03 1.73 1.01 2.93 2.22 3.63-.3.89-.65 1.81-1.02 2.62zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              <span>Open in Apple TestFlight</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <div style="margin-top: 14px; font-size: 0.82rem; color: var(--text-dim);">
+              Direct link: <a href="https://testflight.apple.com/join/NeEjDwf3" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: underline;">https://testflight.apple.com/join/NeEjDwf3</a>
+            </div>
+          </div>
         </form>
 
         <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--text-muted); flex-wrap: wrap;">
-          <span>Prefer direct email?</span>
-          <a href="mailto:admin@yoflycrew.com?subject=YoFly%20Crew%20iOS%20TestFlight%20Access%20Request&body=Hi%20YoFly%20Crew%20team,%0A%0APlease%20invite%20my%20Apple%20ID%20email%20to%20the%20YoFly%20Crew%20TestFlight%20beta:%0A%0AEmail:%20%0AAirline:%20%0ARole%20(Pilot/FA):%20%0A%0AThank%20you!" style="color: var(--accent); font-weight: 600; text-decoration: underline;">
+          <span>Need help or direct support?</span>
+          <a href="mailto:admin@yoflycrew.com?subject=YoFly%20Crew%20iOS%20TestFlight%20Access%20Request&body=Hi%20YoFly%20Crew%20team,%0A%0AI%20am%20requesting%20TestFlight%20access%20to%20the%20YoFly%20Crew%20beta.%0A%0AEmail:%20%0AAirline:%20%0ARole%20(Pilot/FA):%20%0A%0AThank%20you!" style="color: var(--accent); font-weight: 600; text-decoration: underline;">
             admin@yoflycrew.com
           </a>
           <span style="opacity: 0.4;">·</span>
@@ -267,16 +316,16 @@
           <div class="step-pill">
             <div class="step-num">Step 1</div>
             <div class="step-title">Enter Your Email</div>
-            <div class="step-desc">Provide the email tied to your Apple device or TestFlight account.</div>
+            <div class="step-desc">Provide the email tied to your Apple device or crew account.</div>
           </div>
           <div class="step-pill">
             <div class="step-num">Step 2</div>
-            <div class="step-title">Get TestFlight Invite</div>
-            <div class="step-desc">Receive an invite from Apple TestFlight directly to your inbox.</div>
+            <div class="step-title">Instant TestFlight Link</div>
+            <div class="step-desc">Get the instant invite link generated right on this screen.</div>
           </div>
           <div class="step-pill">
             <div class="step-num">Step 3</div>
-            <div class="step-title">Fly Before Everyone Else</div>
+            <div class="step-title">Fly Before Launch</div>
             <div class="step-desc">Install the full native iOS app and explore verified crew lounges & chats.</div>
           </div>
         </div>
@@ -336,11 +385,14 @@
 
   <script src="script.js"></script>
   <script>
+    const TESTFLIGHT_URL = 'https://testflight.apple.com/join/NeEjDwf3';
+
     async function handleTestflightSubmit(e) {
       e.preventDefault();
       const emailInput = document.getElementById('testflightEmail');
       const submitBtn = document.getElementById('submitBtn');
       const statusBox = document.getElementById('statusMessage');
+      const instantBox = document.getElementById('instantAccessBox');
       const email = emailInput.value.trim();
 
       if (!email || !email.includes('@')) {
@@ -350,26 +402,36 @@
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
+      submitBtn.textContent = 'Connecting...';
 
-      // 1. Try to record email if Supabase is active
+      // Store locally in browser for persistent access
+      try {
+        const stored = JSON.parse(localStorage.getItem('yofly_testflight_requests') || '[]');
+        if (!stored.includes(email)) {
+          stored.push(email);
+          localStorage.setItem('yofly_testflight_requests', JSON.stringify(stored));
+        }
+      } catch (err) {}
+
+      // Optional backend recording
       try {
         if (typeof supabaseClient !== 'undefined' && supabaseClient) {
           await supabaseClient
-            .from('waitlist')
-            .insert([{ email: email, platform: 'ios_testflight', created_at: new Date().toISOString() }]);
+            .from('manual_review_requests')
+            .insert([{ work_email: email, claimed_airline: 'TestFlight Beta', status: 'PENDING' }]);
         }
-      } catch (err) {
-        console.warn('Waitlist database log notice:', err);
-      }
+      } catch (err) {}
 
-      // 2. Prepare mailto fallback or confirmation
+      // Reveal immediate auto-access with TestFlight link
       setTimeout(() => {
         statusBox.className = 'status-alert-box success';
-        statusBox.innerHTML = `<strong>Request received!</strong> We will send your TestFlight invitation to <strong>${email}</strong> as soon as seats open. You can also email us directly at <a href="mailto:admin@yoflycrew.com?subject=TestFlight%20Access%20Request%20(${encodeURIComponent(email)})" style="color: #00ffaa; text-decoration: underline;">admin@yoflycrew.com</a>.`;
-        submitBtn.textContent = 'Invite Requested ✓';
-        emailInput.value = '';
-      }, 500);
+        statusBox.innerHTML = `<strong>Email Registered:</strong> <strong>${email}</strong> has been logged for our beta notifications.`;
+        instantBox.style.display = 'block';
+        submitBtn.textContent = 'Invite Unlocked ✓';
+        
+        // Smooth scroll to the access button
+        instantBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 400);
     }
   </script>
 </body>
