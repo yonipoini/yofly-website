@@ -404,21 +404,23 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Connecting...';
 
+      // Send lead to /api/leads backend
+      try {
+        await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, platform: 'ios_testflight' })
+        });
+      } catch (err) {
+        console.warn('API leads notice:', err);
+      }
+
       // Store locally in browser for persistent access
       try {
         const stored = JSON.parse(localStorage.getItem('yofly_testflight_requests') || '[]');
         if (!stored.includes(email)) {
           stored.push(email);
           localStorage.setItem('yofly_testflight_requests', JSON.stringify(stored));
-        }
-      } catch (err) {}
-
-      // Optional backend recording
-      try {
-        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
-          await supabaseClient
-            .from('manual_review_requests')
-            .insert([{ work_email: email, claimed_airline: 'TestFlight Beta', status: 'PENDING' }]);
         }
       } catch (err) {}
 
