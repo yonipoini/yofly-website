@@ -11,13 +11,23 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body {
+    *, *::before, *::after {
+      cursor: auto !important;
+    }
+    html, body {
+      cursor: auto !important;
       background: #090909;
       color: #fff;
       font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+    }
+    a, button, input, select {
+      cursor: pointer !important;
+    }
+    input[type="text"], input[type="password"] {
+      cursor: text !important;
     }
     .admin-container {
       max-width: 1200px;
@@ -285,9 +295,11 @@
     let allLeads = [];
     let currentFiltered = [];
 
-    // Check stored credentials
+    // Check stored credentials or query parameter
     window.addEventListener('DOMContentLoaded', () => {
-      const storedKey = sessionStorage.getItem('yofly_admin_key') || localStorage.getItem('yofly_admin_key');
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryKey = urlParams.get('key') || urlParams.get('admin_key');
+      const storedKey = queryKey || sessionStorage.getItem('yofly_admin_key') || localStorage.getItem('yofly_admin_key');
       if (storedKey) {
         verifyAndLoad(storedKey);
       }
