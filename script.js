@@ -294,9 +294,10 @@ function renderNavAuth(session) {
         <button class="btn btn-primary" data-signout-trigger="true" type="button">Sign Out</button>
       `;
     } else {
+      const getAppHref = isHomePage ? '#download' : 'index.html#download';
       navCta.innerHTML = `
         <a href="login.html" class="btn btn-ghost">Sign In</a>
-        <a href="login.html" class="btn btn-primary">Get the App</a>
+        <a href="${getAppHref}" class="btn btn-primary">Get the App</a>
       `;
     }
   });

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iOS App Pending Review — YoFly Crew</title>
+  <meta name="description" content="YoFly Crew for iOS is pending App Store review. Request access to our exclusive TestFlight beta." />
+  <link rel="icon" href="logo_cropped.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .ios-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 18px;
+      background: rgba(255, 170, 0, 0.12);
+      border: 1px solid rgba(255, 170, 0, 0.35);
+      border-radius: var(--radius-full);
+      color: #ffb833;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+    }
+    .status-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffb833;
+      box-shadow: 0 0 12px #ffb833;
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.5; }
+    }
+    .testflight-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: linear-gradient(145deg, rgba(20, 20, 20, 0.85) 0%, rgba(14, 14, 14, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      padding: 44px 38px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .testflight-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(138, 43, 226, 0.2));
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 10px 25px rgba(0, 255, 255, 0.15);
+    }
+    .input-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+      .input-group {
+        flex-direction: column;
+      }
+      .testflight-card {
+        padding: 32px 22px;
+      }
+    }
+    .email-field {
+      flex: 1;
+      padding: 16px 20px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .email-field:focus {
+      border-color: var(--accent);
+      background: rgba(0, 255, 255, 0.03);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.15);
+    }
+    .status-alert-box {
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      display: none;
+      text-align: left;
+    }
+    .status-alert-box.success {
+      display: block;
+      background: rgba(0, 255, 170, 0.12);
+      border: 1px solid rgba(0, 255, 170, 0.35);
+      color: #00ffaa;
+    }
+    .status-alert-box.info {
+      display: block;
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #80ffff;
+    }
+    .status-alert-box.error {
+      display: block;
+      background: rgba(255, 50, 80, 0.12);
+      border: 1px solid rgba(255, 50, 80, 0.35);
+      color: #ff5577;
+    }
+    .steps-pill-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+      text-align: left;
+    }
+    @media (max-width: 640px) {
+      .steps-pill-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .step-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .step-num {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .step-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ CURSOR ============ -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav scrolled" id="nav">
+    <canvas class="nav-canvas" id="navCanvas"></canvas>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="features.html">Features</a></li>
+        <li><a href="community.html">Community</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="alerts.html">Alerts</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="login.html" class="btn btn-ghost">Sign In</a>
+        <a href="index.html#download" class="btn btn-primary">Get the App</a>
+      </div>
+      <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <ul>
+      <li><a href="features.html" class="mobile-nav-link">Features</a></li>
+      <li><a href="community.html" class="mobile-nav-link">Community</a></li>
+      <li><a href="marketplace.html" class="mobile-nav-link">Marketplace</a></li>
+      <li><a href="alerts.html" class="mobile-nav-link">Alerts</a></li>
+      <li><a href="index.html#download" class="mobile-nav-link btn btn-primary">Get the App</a></li>
+    </ul>
+  </div>
+
+  <!-- ============ SUBPAGE HERO ============ -->
+  <section class="subpage-hero" style="min-height: 48vh; padding-bottom: 40px;">
+    <div class="hero-grid"></div>
+    <div class="orb orb-1" style="background: rgba(0, 255, 255, 0.2);"></div>
+    <div class="orb orb-2" style="background: rgba(255, 0, 255, 0.2);"></div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+
+    <div class="reveal-up" style="max-width: 820px; z-index: 2;">
+      <div class="ios-status-badge">
+        <span class="status-pulse-dot"></span>
+        <span>Apple App Store · Review in Progress</span>
+      </div>
+      <h1 class="hero-title">iOS App <span class="gradient-text">Pending Review</span></h1>
+      <p class="hero-subtitle" style="max-width: 640px; margin: 0 auto;">
+        Our iOS build has been submitted to Apple and is currently in review. We are launching soon! Get early access right now through our official TestFlight beta.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ PAGE CONTENT ============ -->
+  <main class="page-content" style="padding-top: 20px;">
+    <div class="reveal-up">
+      <div class="testflight-card">
+        <div class="testflight-icon-wrap">
+          <!-- Apple Logo SVG -->
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-1.19.74-1.97 1.94-1.95 3.37.03 1.73 1.01 2.93 2.22 3.63-.3.89-.65 1.81-1.02 2.62zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+        </div>
+
+        <h2 style="font-size: 1.8rem; margin-bottom: 12px; text-align: center;">Get TestFlight Early Access</h2>
+        <p style="text-align: center; color: var(--text-muted); font-size: 1rem; max-width: 520px; margin: 0 auto 28px;">
+          Enter your Apple ID email below. We'll send you an invitation link to install the YoFly Crew iOS beta via Apple TestFlight.
+        </p>
+
+        <form id="testflightForm" onsubmit="handleTestflightSubmit(event)">
+          <div class="input-group">
+            <input 
+              type="email" 
+              id="testflightEmail" 
+              class="email-field" 
+              placeholder="Enter your Apple ID / crew email" 
+              required 
+              autocomplete="email"
+            />
+            <button type="submit" id="submitBtn" class="btn btn-primary" style="white-space: nowrap; padding: 16px 28px; font-weight: 600;">
+              Send TestFlight Invite ✈️
+            </button>
+          </div>
+          <div id="statusMessage" class="status-alert-box"></div>
+        </form>
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--text-muted); flex-wrap: wrap;">
+          <span>Prefer direct email?</span>
+          <a href="mailto:admin@yoflycrew.com?subject=YoFly%20Crew%20iOS%20TestFlight%20Access%20Request&body=Hi%20YoFly%20Crew%20team,%0A%0APlease%20invite%20my%20Apple%20ID%20email%20to%20the%20YoFly%20Crew%20TestFlight%20beta:%0A%0AEmail:%20%0AAirline:%20%0ARole%20(Pilot/FA):%20%0A%0AThank%20you!" style="color: var(--accent); font-weight: 600; text-decoration: underline;">
+            admin@yoflycrew.com
+          </a>
+          <span style="opacity: 0.4;">·</span>
+          <span style="color: var(--text-dim);">Google Play Android build is already live</span>
+        </div>
+
+        <!-- 3 Step Info Cards -->
+        <div class="steps-pill-grid">
+          <div class="step-pill">
+            <div class="step-num">Step 1</div>
+            <div class="step-title">Enter Your Email</div>
+            <div class="step-desc">Provide the email tied to your Apple device or TestFlight account.</div>
+          </div>
+          <div class="step-pill">
+            <div class="step-num">Step 2</div>
+            <div class="step-title">Get TestFlight Invite</div>
+            <div class="step-desc">Receive an invite from Apple TestFlight directly to your inbox.</div>
+          </div>
+          <div class="step-pill">
+            <div class="step-num">Step 3</div>
+            <div class="step-title">Fly Before Everyone Else</div>
+            <div class="step-desc">Install the full native iOS app and explore verified crew lounges & chats.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Android Banner -->
+      <div style="max-width: 680px; margin: 32px auto 0; padding: 20px 24px; background: rgba(0, 255, 255, 0.04); border: 1px solid rgba(0, 255, 255, 0.15); border-radius: 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div>
+          <div style="font-weight: 600; color: #fff; margin-bottom: 4px;">Have an Android device?</div>
+          <div style="font-size: 0.88rem; color: var(--text-muted);">YoFly Crew is ready for immediate download on the Google Play Store.</div>
+        </div>
+        <a href="https://play.google.com/store/apps/details?id=com.yoflycrew.app&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" class="btn btn-ghost" style="padding: 10px 20px; font-size: 0.9rem;">
+          Get Google Play Version →
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logo_cropped.png" alt="YoFly Crew" class="footer-logo" />
+        <div class="footer-brand-text">
+          <div class="footer-tagline">Built for pilots &amp; flight attendants.</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Product</div>
+          <a href="features.html">Features</a>
+          <a href="community.html">Community</a>
+          <a href="marketplace.html">Marketplace</a>
+          <a href="alerts.html">Alerts</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Company</div>
+          <a href="about.html">About Us</a>
+          <a href="support.html">Support</a>
+          <a href="careers.html">Careers</a>
+          <a href="press.html">Press</a>
+          <a href="investors.html">Investors</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="cookies.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 YoFly Crew. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    async function handleTestflightSubmit(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('testflightEmail');
+      const submitBtn = document.getElementById('submitBtn');
+      const statusBox = document.getElementById('statusMessage');
+      const email = emailInput.value.trim();
+
+      if (!email || !email.includes('@')) {
+        statusBox.className = 'status-alert-box error';
+        statusBox.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      // 1. Try to record email if Supabase is active
+      try {
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+          await supabaseClient
+            .from('waitlist')
+            .insert([{ email: email, platform: 'ios_testflight', created_at: new Date().toISOString() }]);
+        }
+      } catch (err) {
+        console.warn('Waitlist database log notice:', err);
+      }
+
+      // 2. Prepare mailto fallback or confirmation
+      setTimeout(() => {
+        statusBox.className = 'status-alert-box success';
+        statusBox.innerHTML = `<strong>Request received!</strong> We will send your TestFlight invitation to <strong>${email}</strong> as soon as seats open. You can also email us directly at <a href="mailto:admin@yoflycrew.com?subject=TestFlight%20Access%20Request%20(${encodeURIComponent(email)})" style="color: #00ffaa; text-decoration: underline;">admin@yoflycrew.com</a>.`;
+        submitBtn.textContent = 'Invite Requested ✓';
+        emailInput.value = '';
+      }, 500);
+    }
+  </script>
+</body>
+</html>
